@@ -29,6 +29,7 @@ import Image from 'next/image'
 type Mode = 'notes' | 'flashcards' | 'quiz' | 'story'
 
 export default function DashboardDetail () {
+  
   const [selectedMode, setSelectedMode] = useState<Mode>('notes')
   const [currentCard, setCurrentCard] = useState(0)
   const [currentQuiz, setCurrentQuiz] = useState(0)

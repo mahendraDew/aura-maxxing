@@ -1,77 +1,86 @@
 import { NextResponse } from 'next/server'
+import { YoutubeTranscript } from 'youtube-transcript'
 
-export async function POST(req: Request) {
+export async function POST (req: Request) {
   const { url } = await req.json()
+  console.log('url-be:', url)
 
-  // Simulate processing delay
-  await new Promise(resolve => setTimeout(resolve, 2000))
+  try {
+    // const parser = new XMLParser();
+    console.log('URL!!: ' + url)
 
-  // Mock data
-  const data = {
-    keyPoints: [
-      "Introduction to AI",
-      "Machine Learning basics",
-      "Neural Networks explained",
-      "Applications of AI in real-world scenarios",
-      "Future of AI and ethical considerations"
-    ],
-    flashcards: [
-      { question: "What is AI?", answer: "Artificial Intelligence is the simulation of human intelligence in machines." },
-      { question: "What is Machine Learning?", answer: "A subset of AI that enables systems to learn and improve from experience." },
-      { question: "What are Neural Networks?", answer: "Computing systems inspired by biological neural networks in animal brains." }
-    ],
-    quiz: [
+    // const info = await ytdl.getInfo(url)
+    const transcript = await YoutubeTranscript.fetchTranscript(url)
+    
+
+    // console.log(transcript)
+    // if (!info.player_response.captions) return null;
+    // const tracks =
+    //   info.player_response.captions.playerCaptionsTracklistRenderer
+    //     .captionTracks;
+
+    // if (!tracks || !tracks.length) {
+    //   return "No tracks";
+    // } else {
+    //   //console.log(tracks);
+    //   //return "Ok!";
+
+    //   console.log("Captions:\n");
+    //   console.log(first_transcript);
+    //   return first_transcript;
+    // }
+    const transcriptData = transcript.map((entry) => entry.text).join(" ");
+
+    // console.log("transcriptData:", transcriptData)
+    return NextResponse.json({transcriptData},{ status: 200 })
+  } catch (e) {
+    console.log('Exception happened:\n')
+    console.log(e)
+    return NextResponse.json(
       {
-        question: "Which of the following is NOT a type of Machine Learning?",
-        options: ["Supervised Learning", "Unsupervised Learning", "Reinforcement Learning", "Quantum Learning"],
-        correctAnswer: 3
+        msg: 'Error: cant get the transcript, ' + e
       },
-      {
-        question: "What is the main goal of supervised learning?",
-        options: ["Clustering data", "Predicting outcomes", "Reinforcing actions", "Generating new data"],
-        correctAnswer: 1
-      }
-    ],
-    projects: [
-      {
-        title: "Build a Simple Chatbot",
-        description: "Create a basic chatbot using natural language processing techniques.",
-        steps: [
-          "Set up a Python environment",
-          "Install necessary libraries (e.g., NLTK)",
-          "Implement basic text processing",
-          "Create a simple response mechanism",
-          "Test and refine your chatbot"
-        ]
-      },
-      {
-        title: "Image Classification with TensorFlow",
-        description: "Develop an image classification model using TensorFlow and Keras.",
-        steps: [
-          "Prepare your dataset",
-          "Design a Convolutional Neural Network (CNN)",
-          "Train your model",
-          "Evaluate model performance",
-          "Use the model for predictions"
-        ]
-      }
-    ],
-    story: [
-      {
-        text: "In a world where AI reigned supreme, young Ada found herself fascinated by the intricate dance of algorithms and data.",
-        image: "/story-image-1.jpg"
-      },
-      {
-        text: "With a witty AI assistant named Siri-ously Funny, Ada embarked on a journey to unravel the mysteries of machine learning.",
-        image: "/story-image-2.jpg"
-      },
-      {
-        text: "Together, they faced challenges, debugged code, and occasionally argued about whether AI could truly appreciate a good pun.",
-        image: "/story-image-3.jpg"
-      }
-    ]
+      { status: 500 }
+    )
   }
-
-  return NextResponse.json(data)
 }
 
+// import ytdl from 'ytdl-core'
+// import axios from 'axios'
+
+// import { XMLParser, XMLBuilder, XMLValidator } from 'fast-xml-parser'
+
+// export const getSubTitles = async (url: string) => {
+//   try {
+//     const parser = new XMLParser()
+
+//     const info = await ytdl.getInfo(url)
+//     if (!info.player_response.captions) return null
+//     const tracks =
+//       info.player_response.captions.playerCaptionsTracklistRenderer
+//         .captionTracks
+
+//     if (!tracks || !tracks.length) return null
+
+//     const parsedTracks = tracks
+
+//     /*const parsedTracks = await Promise.all(
+//             tracks.map(async (track) => ({
+//                 lang: track.languageCode,
+//                 content: parser.parse((await axios.get(track.baseUrl)).data, {
+//                     ignoreAttributes: false,
+//                 }),
+//             })),
+//         );
+//         */
+
+//     console.log(parsedTracks[0])
+
+//     //return parsedTracks[0].content.transcript.text;
+//     return 'OK!'
+//   } catch (e) {
+//     console.log('Exception happened:\n')
+//     console.log(e)
+//     return null
+//   }
+// }

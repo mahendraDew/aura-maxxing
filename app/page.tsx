@@ -78,9 +78,9 @@ export default function Home () {
                   <ArrowRight className='ml-2 group-hover:translate-x-1 transition-transform' />
                 </Button>
               </Link>
-              <Link href='#features'>
+              <Link href='/signin'>
                 <Button size='lg' variant='outline'>
-                  Learn More
+                  Signin
                 </Button>
               </Link>
             </div>
