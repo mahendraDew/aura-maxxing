@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import ModeToggle from '@/components/ui/ModeToggle'
+import Image from 'next/image'
 
 type Mode = 'notes' | 'flashcards' | 'quiz' | 'story'
 
@@ -293,7 +294,9 @@ export default function DashboardDetail () {
                 }}
                 className='absolute inset-0'
               >
-                <img
+                <Image
+                width={700}
+                height={400}
                   src='https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1920&h=1080&fit=crop'
                   alt='Story background'
                   className='w-full h-full object-cover'

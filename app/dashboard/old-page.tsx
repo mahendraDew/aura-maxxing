@@ -14,7 +14,7 @@ import { Flashcards } from '@/components/Flashcards'
 
 export default function Dashboard() {
   const [url, setUrl] = useState('')
-  const [content, setContent] = useState<any>(null)
+  const [content, setContent] = useState<any>('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

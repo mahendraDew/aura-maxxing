@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 interface StoryTellingProps {
   story: {
@@ -52,7 +53,9 @@ export function StoryTelling({ story }: StoryTellingProps) {
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <img
+            <Image
+            width={700}
+            height={400}
               src={story[currentPage].image}
               alt={`Story illustration ${currentPage + 1}`}
               className="w-full h-64 object-cover mb-4 rounded-md"
