@@ -20,13 +20,16 @@ import {
   ChevronRight,
   Menu,
   FileStack,
-  ChevronLeft
+  ChevronLeft,
+  Info,
+  MoveRight
 } from 'lucide-react'
 import Link from 'next/link'
 import ModeToggle from '@/components/ui/ModeToggle'
 import Image from 'next/image'
 import { SignOutButton } from '@clerk/nextjs'
 import RevisionNotes from '../RevisionNotes'
+import { CardStack } from '../CardStack'
 type Mode = 'notes' | 'flashcards' | 'quiz' | 'story'
 // interface UserData {
 //   id: string;
@@ -52,8 +55,8 @@ interface Props {
   }
   notesEntry: {
     revisedNotes: string
-    flashcards: string[]
-    projectList: string[]
+    flashcards: string
+    projectList: string
     storytelling: string
   }
 }
@@ -246,39 +249,61 @@ export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
           )}
 
           {selectedMode === 'flashcards' && (
-            <motion.div
-              key='flashcards'
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className='h-[500px] flex items-center justify-center px-4'
-            >
-              <motion.div
-                key={currentCard}
-                initial={{ rotateY: 0 }}
-                whileHover={{ scale: 1.02 }}
-                className='relative w-full max-w-[400px] h-[300px] cursor-pointer'
-                drag='x'
-                dragConstraints={{ left: 0, right: 0 }}
-                onDragEnd={(e, { offset, velocity }) => {
-                  if (offset.x > 100 || velocity.x > 500) {
-                    setCurrentCard(prev => (prev + 1) % flashcards.length)
-                  }
-                }}
-              >
-                <Card className='absolute inset-0 p-4 md:p-8 flex items-center justify-center text-center backdrop-blur-sm bg-card/50'>
+            // <motion.div
+            //   key='flashcards'
+            //   initial={{ opacity: 0 }}
+            //   animate={{ opacity: 1 }}
+            //   exit={{ opacity: 0 }}
+            //   className='h-[500px] flex items-center justify-center px-4'
+            // >
+            //   <motion.div
+            //     key={currentCard}
+            //     initial={{ rotateY: 0 }}
+            //     whileHover={{ scale: 1.02 }}
+            //     className='relative w-full max-w-[400px] h-[300px] cursor-pointer'
+            //     drag='x'
+            //     dragConstraints={{ left: 0, right: 0 }}
+            //     onDragEnd={(e, { offset, velocity }) => {
+            //       if (offset.x > 100 || velocity.x > 500) {
+            //         setCurrentCard(prev => (prev + 1) % flashcards.length)
+            //       }
+            //     }}
+            //   >
+            <>
+              {/* <Card className='absolute inset-0 p-4 md:p-8 flex items-center justify-center text-center backdrop-blur-sm bg-card/50'>
                   <div>
                     <p className='text-lg md:text-xl mb-4'>
                       {flashcards[currentCard].front}
-                      {/* {notesEntry.flashcards.map(card => (<div>{card}</div>))} */}
                     </p>
                     <p className='text-xs md:text-sm text-muted-foreground'>
                       Swipe right for next card
                     </p>
                   </div>
-                </Card>
-              </motion.div>
-            </motion.div>
+                </Card> */}
+              <div className=' max-h-screen'>
+                <h2 className='text-3xl font-bold mb-6 hidden md:block '>
+                  Flash Cards
+                </h2>
+                <main className='flex h-[34rem] flex-col items-center justify-center '>
+                  <div className=' w-full flex justify-center items-center'>
+                    <CardStack flashcardString={notesEntry.flashcards}/>
+                  </div>
+                </main>
+                <div className='flex  w-full justify-center'>
+                  <div className='flex gap-2 px-5 max-w-3xl w-full  text-zinc-400 dark:text-zinc-500'>
+                    <Info className='w-5 h-5 pt-1' />
+                    <div>
+                      <p className='flex gap-1'>
+                        Swipe right to go to next card <MoveRight />
+                      </p>
+                      <p>double click to show the answer</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+            //   </motion.div>
+            // </motion.div>
           )}
 
           {selectedMode === 'quiz' && (
