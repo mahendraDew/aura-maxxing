@@ -8,9 +8,13 @@ import { Card } from '@/components/ui/card'
 import { toast } from 'sonner'
 import axios from 'axios'
 import { Youtube } from 'lucide-react'
+import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 function DashboardContent () {
   const [url, setUrl] = useState('')
+  const [loading, setLoading] = useState(false)
+  const router = useRouter() // Initialize the useRouter hook
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -24,19 +28,36 @@ function DashboardContent () {
       return
     }
 
-    //#1 : get the transcription of the yt video
-    //#1.1: make a db entry over this yt video and data
-    //#2: hit the gemini and get all the details of the cards and functions
-    const response = await axios.post('/api/process-video', { url })
-    const data = response.data
-    console.log('data-fe:', data.transcriptData)
+    try {
+      setLoading(true)
 
-    // if (!data.transcriptData) {
-    //   toast('Transcription failed!', {
-    //     description: 'Enter only valid public youtube link!'
-    //   })
-    // }
+      //#1 : get the transcription of the yt video
+      //#1.1: make a db entry over this yt video and data
+      //#2: hit the gemini and get all the details of  the cards and functions
+      const response = await axios.post('/api/process-video', { url })
+      const data = response.data
+      console.log('data-fe:', data)
 
+      if (data.notesDataId) {
+        // Redirect to /dashboard/[id]
+        router.push(`/dashboard/${data.notesDataId}`)
+      } else {
+        toast('Failed to retrieve ID!', {
+          description: 'The response did not include a notesDataId!'
+        })
+      }
+
+      // if (!data.transcriptData) {
+      //   toast('Transcription failed!', {
+      //     description: 'Enter only valid public youtube link!'
+      //   })
+      // }
+
+      setLoading(false)
+    } catch (error) {
+      console.log('Error aa gya bhai....', e)
+      setLoading(false)
+    }
   }
 
   const validateYouTubeURL = (url: string) => {
@@ -54,30 +75,32 @@ function DashboardContent () {
         className='max-w-6xl mx-auto mt-10'
       >
         <h1 className='text-4xl font-bold mb-8'>Dashboard</h1>
-
-        {/* URL Input Section */}
-        <Card className='p-6 mb-8 backdrop-blur-sm bg-card/50'>
-          <h2 className='text-2xl font-semibold mb-4'>Start Learning</h2>
-          <div className='flex gap-4 flex-col md:flex-row'>
-            <form
-              onSubmit={handleSubmit}
-              className='flex gap-4 flex-col md:flex-row w-full'
-            >
-              <Input
-                type='url'
-                placeholder='https://www.youtube.com/watch?v=...'
-                value={url}
-                onChange={e => setUrl(e.target.value)}
-                className='flex-1'
-              />
-              <Button type='submit'>
-                <Youtube className='mr-2 h-4 w-4' />
-                Analyze
-              </Button>
-            </form>
-          </div>
-        </Card>
-
+        {loading ? (
+          <div>loading...</div>
+        ) : (
+          // {/* URL Input Section */}
+          <Card className='p-6 mb-8 backdrop-blur-sm bg-card/50'>
+            <h2 className='text-2xl font-semibold mb-4'>Start Learning</h2>
+            <div className='flex gap-4 flex-col md:flex-row'>
+              <form
+                onSubmit={handleSubmit}
+                className='flex gap-4 flex-col md:flex-row w-full'
+              >
+                <Input
+                  type='url'
+                  placeholder='https://www.youtube.com/watch?v=...'
+                  value={url}
+                  onChange={e => setUrl(e.target.value)}
+                  className='flex-1'
+                />
+                <Button type='submit'>
+                  <Youtube className='mr-2 h-4 w-4' />
+                  Analyze
+                </Button>
+              </form>
+            </div>
+          </Card>
+        )}
         {/* Stats Overview */}
         {/* <div className='grid md:grid-cols-3 gap-6 mb-8'>
           {[

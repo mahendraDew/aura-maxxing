@@ -26,6 +26,7 @@ import Link from 'next/link'
 import ModeToggle from '@/components/ui/ModeToggle'
 import Image from 'next/image'
 import { SignOutButton } from '@clerk/nextjs'
+import RevisionNotes from '../RevisionNotes'
 type Mode = 'notes' | 'flashcards' | 'quiz' | 'story'
 // interface UserData {
 //   id: string;
@@ -49,9 +50,15 @@ interface Props {
 
     email: string
   }
+  notesEntry: {
+    revisedNotes: string
+    flashcards: string[]
+    projectList: string[]
+    storytelling: string
+  }
 }
 
-export const DashboardDetailContent = ({ userData }: Props) => {
+export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
   const [selectedMode, setSelectedMode] = useState<Mode>('notes')
   const [currentCard, setCurrentCard] = useState(0)
   const [currentQuiz, setCurrentQuiz] = useState(0)
@@ -97,21 +104,21 @@ export const DashboardDetailContent = ({ userData }: Props) => {
     }
   ]
 
-  const notes = [
-    'React is a JavaScript library for building user interfaces',
-    'Components are the building blocks of React applications',
-    'Virtual DOM is used for efficient rendering',
-    'Hooks were introduced in React 16.8',
-    'useEffect handles side effects in functional components',
-    'Props are read-only and flow down the component tree',
-    'State can be managed locally or globally'
-  ]
+  // const notes = [
+  //   'React is a JavaScript library for building user interfaces',
+  //   'Components are the building blocks of React applications',
+  //   'Virtual DOM is used for efficient rendering',
+  //   'Hooks were introduced in React 16.8',
+  //   'useEffect handles side effects in functional components',
+  //   'Props are read-only and flow down the component tree',
+  //   'State can be managed locally or globally'
+  // ]
 
-  const user = {
-    name: 'mahendra',
-    email: 'mahendra@gmail.com',
-    imgsrc: ''
-  }
+  // const user = {
+  //   name: 'mahendra',
+  //   email: 'mahendra@gmail.com',
+  //   imgsrc: ''
+  // }
 
   const Sidebar = ({ className = '' }) => (
     <div
@@ -150,7 +157,7 @@ export const DashboardDetailContent = ({ userData }: Props) => {
         <Avatar>
           <AvatarImage src={userData.imageUrl} />
           <AvatarFallback>
-            {user.name.split('')[0].toUpperCase()}
+            {userData.fullname?.split('')[0].toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className='flex-1'>
@@ -173,7 +180,7 @@ export const DashboardDetailContent = ({ userData }: Props) => {
         </Button> */}
         <SignOutButton redirectUrl='/'>
           <div className=' cursor-pointer'>
-            <LogOut className='w-5 h-5 opacity-75 hover:opacity-100'/>
+            <LogOut className='w-5 h-5 opacity-75 hover:opacity-100' />
           </div>
         </SignOutButton>
       </div>
@@ -221,7 +228,9 @@ export const DashboardDetailContent = ({ userData }: Props) => {
               <h2 className='text-3xl font-bold mb-6 hidden md:block'>
                 Revision Notes
               </h2>
-              {notes.map((note, index) => (
+              {/* {notesEntry.revisedNotes} */}
+              <RevisionNotes content={notesEntry.revisedNotes} />
+              {/* {notesEntry.revisedNotes.map((note, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
@@ -232,7 +241,7 @@ export const DashboardDetailContent = ({ userData }: Props) => {
                   <ChevronRight className='h-4 w-4 mt-1 text-primary flex-shrink-0' />
                   <p className='text-sm md:text-base'>{note}</p>
                 </motion.div>
-              ))}
+              ))} */}
             </motion.div>
           )}
 
@@ -261,6 +270,7 @@ export const DashboardDetailContent = ({ userData }: Props) => {
                   <div>
                     <p className='text-lg md:text-xl mb-4'>
                       {flashcards[currentCard].front}
+                      {/* {notesEntry.flashcards.map(card => (<div>{card}</div>))} */}
                     </p>
                     <p className='text-xs md:text-sm text-muted-foreground'>
                       Swipe right for next card

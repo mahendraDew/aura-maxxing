@@ -20,28 +20,28 @@ const videoSchema = new Schema<IVideo>(
 const VideoModel = mongoose.models.Video || mongoose.model<IVideo>("Video", videoSchema);
 
 // AI Output Schema
-// interface IAIOutput extends Document {
-//   video: mongoose.Types.ObjectId;
-//   revisedNotes: string;
-//   flashcards: string[];
-//   projectList: string[];
-//   storytelling: string;
-// }
+interface VideoNotes extends Document {
+  userId: String,
+  videoId: mongoose.Types.ObjectId;
+  revisedNotes: string;
+  flashcards: string;
+  projectList: string;
+  storytelling: string;
+}
 
-// const aiOutputSchema = new Schema<IAIOutput>(
-//   {
-//     video: { type: mongoose.Schema.Types.ObjectId, ref: "Video", required: true },
-//     revisedNotes: { type: String },
-//     flashcards: [{ type: String }],
-//     projectList: [{ type: String }],
-//     storytelling: { type: String },
-//   },
-//   { timestamps: true }
-// );
+const VideoNotesSchema = new Schema<VideoNotes>(
+  {
+    userId: {type: String},
+    videoId: { type: mongoose.Schema.Types.ObjectId, ref: "Video", required: true },
+    revisedNotes: { type: String },
+    flashcards: { type: String },
+    projectList: { type: String },
+    storytelling: { type: String },
+  },
+  { timestamps: true }
+);
 
-// const AIOutput = mongoose.models.AIOutput || mongoose.model<IAIOutput>("AIOutput", aiOutputSchema);
+const VideoNotesModel = mongoose.models.VideoNotesContent || mongoose.model<VideoNotes>("VideoNotesContent", VideoNotesSchema);
 
 // Export Models
-export { VideoModel, 
-    // AIOutput
- };
+export { VideoModel, VideoNotesModel};
