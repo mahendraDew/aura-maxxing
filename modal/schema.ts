@@ -1,33 +1,23 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-
-
 // Video Schema
 interface IVideo extends Document {
-  videoId: string;
-  title: string;
-  description: string;
-  thumbnail: string;
+  url: string;
   transcript: string;
-  userId: mongoose.Types.ObjectId;
-  aiOutputs: mongoose.Types.ObjectId;
+  userId: String;
   createdAt: Date;
 }
 
 const videoSchema = new Schema<IVideo>(
   {
-    videoId: { type: String, required: true, unique: true },
-    title: { type: String, required: true },
-    description: { type: String },
-    thumbnail: { type: String },
+    url: { type: String, required: true },
     transcript: { type: String },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    aiOutputs: { type: mongoose.Schema.Types.ObjectId, ref: "AIOutput" },
+    userId: { type: String },
   },
   { timestamps: true }
 );
 
-const Video = mongoose.models.Video || mongoose.model<IVideo>("Video", videoSchema);
+const VideoModel = mongoose.models.Video || mongoose.model<IVideo>("Video", videoSchema);
 
 // AI Output Schema
 // interface IAIOutput extends Document {
@@ -52,6 +42,6 @@ const Video = mongoose.models.Video || mongoose.model<IVideo>("Video", videoSche
 // const AIOutput = mongoose.models.AIOutput || mongoose.model<IAIOutput>("AIOutput", aiOutputSchema);
 
 // Export Models
-export { Video, 
+export { VideoModel, 
     // AIOutput
  };

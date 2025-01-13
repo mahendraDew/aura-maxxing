@@ -17,6 +17,7 @@ export async function Navigation () {
           </Link>
           <ModeToggle />
           <UserButton afterSignOutUrl='/'/>
+          
           {/* {session && (
             <div className='rounded-full cursor-pointer'>
               <Image

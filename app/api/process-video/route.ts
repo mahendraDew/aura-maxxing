@@ -1,38 +1,53 @@
+import connectToDatabase from '@/lib/db/mongo/db'
+import { VideoModel } from '@/modal/schema'
+import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { YoutubeTranscript } from 'youtube-transcript'
 
 export async function POST (req: Request) {
+  const { userId } = await auth()
   const { url } = await req.json()
   console.log('url-be:', url)
+  await connectToDatabase()
 
   try {
     // const parser = new XMLParser();
     console.log('URL!!: ' + url)
 
+    //#1 : get the transcription of the yt video
+    console.log('transcripting....')
     // const info = await ytdl.getInfo(url)
     const transcript = await YoutubeTranscript.fetchTranscript(url)
-    
+    const transcriptData = transcript.map(entry => entry.text).join(' ')
 
-    // console.log(transcript)
-    // if (!info.player_response.captions) return null;
-    // const tracks =
-    //   info.player_response.captions.playerCaptionsTracklistRenderer
-    //     .captionTracks;
+    if (!transcriptData || transcriptData === '') {
+      return NextResponse.json(
+        { message: 'Transcription Failed.' },
+        { status: 400 }
+      )
+    }
 
-    // if (!tracks || !tracks.length) {
-    //   return "No tracks";
-    // } else {
-    //   //console.log(tracks);
-    //   //return "Ok!";
+    console.log('transcription: ', transcriptData)
 
-    //   console.log("Captions:\n");
-    //   console.log(first_transcript);
-    //   return first_transcript;
-    // }
-    const transcriptData = transcript.map((entry) => entry.text).join(" ");
+    console.log('storign it in be....')
+    //#1.1: make a db entry over this yt video and data
+    const videoData = await VideoModel.create({
+      url: url,
+      transcript: transcriptData,
+      userId: userId
+    })
+
+    console.log('videodata:', videoData)
+
+    return NextResponse.json(
+      { message: 'Video Data saved successfully', _id: videoData._id },
+      { status: 201 }
+    )
+
+    //#2: hit the gemini and get all the details of the cards and functions
 
     // console.log("transcriptData:", transcriptData)
-    return NextResponse.json({transcriptData},{ status: 200 })
+    return NextResponse.json({ transcriptData }, { status: 200 })
   } catch (e) {
     console.log('Exception happened:\n')
     console.log(e)
@@ -44,43 +59,3 @@ export async function POST (req: Request) {
     )
   }
 }
-
-// import ytdl from 'ytdl-core'
-// import axios from 'axios'
-
-// import { XMLParser, XMLBuilder, XMLValidator } from 'fast-xml-parser'
-
-// export const getSubTitles = async (url: string) => {
-//   try {
-//     const parser = new XMLParser()
-
-//     const info = await ytdl.getInfo(url)
-//     if (!info.player_response.captions) return null
-//     const tracks =
-//       info.player_response.captions.playerCaptionsTracklistRenderer
-//         .captionTracks
-
-//     if (!tracks || !tracks.length) return null
-
-//     const parsedTracks = tracks
-
-//     /*const parsedTracks = await Promise.all(
-//             tracks.map(async (track) => ({
-//                 lang: track.languageCode,
-//                 content: parser.parse((await axios.get(track.baseUrl)).data, {
-//                     ignoreAttributes: false,
-//                 }),
-//             })),
-//         );
-//         */
-
-//     console.log(parsedTracks[0])
-
-//     //return parsedTracks[0].content.transcript.text;
-//     return 'OK!'
-//   } catch (e) {
-//     console.log('Exception happened:\n')
-//     console.log(e)
-//     return null
-//   }
-// }

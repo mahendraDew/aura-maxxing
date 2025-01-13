@@ -9,44 +9,45 @@ import { toast } from 'sonner'
 import axios from 'axios'
 import { Youtube } from 'lucide-react'
 
+function DashboardContent () {
+  const [url, setUrl] = useState('')
 
-function DashboardContent() {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-    const [url, setUrl] = useState('')
-
-
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault()
-  
-      if (validateYouTubeURL(url)) {
-        console.log('Valid YouTube URL')
-      } else {
-        toast('Invalid link!', {
-          description: 'Enter only youtube link!'
-        })
-        return
-      }
-  
-      //#1 : get the transcription of the yt video
-      const response = await axios.post('/api/process-video', { url })
-      const data = response.data
-      console.log("data-fe:", data.transcriptData)
-  
-      //#1.1: make a db entry over this yt video and data
-  
-      //#2: hit the gemini and get all the details of the cards and functions 
-      
+    if (validateYouTubeURL(url)) {
+      console.log('Valid YouTube URL')
+    } else {
+      toast('Invalid link!', {
+        description: 'Enter only youtube link!'
+      })
+      return
     }
-  
-    const validateYouTubeURL = (url: string) => {
-      const regex =
-        /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?[a-zA-Z0-9_-]{11}(&.*)?$/
-      return regex.test(url)
-    }
-  
+
+    //#1 : get the transcription of the yt video
+    //#1.1: make a db entry over this yt video and data
+    //#2: hit the gemini and get all the details of the cards and functions
+    const response = await axios.post('/api/process-video', { url })
+    const data = response.data
+    console.log('data-fe:', data.transcriptData)
+
+    // if (!data.transcriptData) {
+    //   toast('Transcription failed!', {
+    //     description: 'Enter only valid public youtube link!'
+    //   })
+    // }
+
+  }
+
+  const validateYouTubeURL = (url: string) => {
+    const regex =
+      /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?[a-zA-Z0-9_-]{11}(&.*)?$/
+    return regex.test(url)
+  }
+
   return (
-  <>
-   <motion.div
+    <>
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -127,7 +128,7 @@ function DashboardContent() {
           </div>
         </Card> */}
       </motion.div>
-  </>
+    </>
   )
 }
 
