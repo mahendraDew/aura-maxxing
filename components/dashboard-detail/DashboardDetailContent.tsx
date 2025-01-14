@@ -20,7 +20,8 @@ import {
   FileStack,
   ChevronLeft,
   Info,
-  MoveRight
+  MoveRight,
+  Lightbulb
 } from 'lucide-react'
 import Link from 'next/link'
 import ModeToggle from '@/components/ui/ModeToggle'
@@ -29,9 +30,10 @@ import { SignOutButton } from '@clerk/nextjs'
 import RevisionNotes from '../RevisionNotes'
 import { CardStack } from '../CardStack'
 import { Quiz } from './quize'
+import ProjectSection from './ProjectSection'
 // import { Quiz } from './quize'
 // import { NotesContent } from '@/modal/schema'
-type Mode = 'notes' | 'flashcards' | 'quiz' | 'story'
+type Mode = 'notes' | 'flashcards' | 'quiz' | 'story' | 'projects'
 
 export interface NotesContent {
   revisedNotes: string
@@ -106,10 +108,10 @@ type NotesDataType = {
     correctOption: number
   }>
   projectList: Array<{
-    category: string
-    title: string
-    description: string
-    steps: string[]
+    category: string;
+    title: string;
+    description: string;
+    steps: { context: string; description: string }[];
   }>
   storytelling: {
     title: string
@@ -136,6 +138,7 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
     { icon: BookOpen, label: 'Revise Notes', mode: 'notes' },
     { icon: FileStack, label: 'Flash Cards', mode: 'flashcards' },
     { icon: BrainCircuit, label: 'Quiz', mode: 'quiz' },
+    { icon: Lightbulb, label: 'Projects', mode: 'projects' },
     { icon: Clapperboard, label: 'Story Mode', mode: 'story' }
   ]
 
@@ -367,6 +370,17 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
                 <Quiz questions={NotesData.quizzes} />
               </div>
             </>
+          )}
+          {selectedMode === 'projects' && (
+             <motion.div
+             key='projects'
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             exit={{ opacity: 0, y: -20 }}
+             className='max-w-4xl mx-auto px-4'
+           >
+             <ProjectSection projectList={NotesData.projectList} />
+           </motion.div>
           )}
 
           {selectedMode === 'story' && (
