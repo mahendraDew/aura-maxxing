@@ -49,6 +49,16 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
+  			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
   		borderRadius: {
@@ -73,23 +83,22 @@ export default {
   					height: '0'
   				}
   			},
-			  spotlight: {
-				"0%": {
-				  opacity: "0",
-				  transform: "translate(-72%, -62%) scale(0.5)",
-				},
-				"100%": {
-				  opacity: "1",
-				  transform: "translate(-50%,-40%) scale(1)",
-				},
-			  },
+  			spotlight: {
+  				'0%': {
+  					opacity: '0',
+  					transform: 'translate(-72%, -62%) scale(0.5)'
+  				},
+  				'100%': {
+  					opacity: '1',
+  					transform: 'translate(-50%,-40%) scale(1)'
+  				}
+  			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-			spotlight: "spotlight 2s ease .75s 1 forwards",
-		  },
-		
+  			spotlight: 'spotlight 2s ease .75s 1 forwards'
+  		}
   	}
   },
   plugins: [require("tailwindcss-animate"), require('@tailwindcss/typography')],

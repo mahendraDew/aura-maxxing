@@ -17,7 +17,6 @@ import {
   BrainCircuit,
   Clapperboard,
   LogOut,
-  ChevronRight,
   Menu,
   FileStack,
   ChevronLeft,
@@ -30,21 +29,34 @@ import Image from 'next/image'
 import { SignOutButton } from '@clerk/nextjs'
 import RevisionNotes from '../RevisionNotes'
 import { CardStack } from '../CardStack'
+// import { NotesContent } from '@/modal/schema'
 type Mode = 'notes' | 'flashcards' | 'quiz' | 'story'
-// interface UserData {
-//   id: string;
-//   firstName?: string;
-//   lastName?: string;
-//   emailAddress?: string;
-//   profileImageUrl?: string;
-// }
 
-// interface DashboardDetailContentProps {
-//   userData: UserData;
-// }
-// interface Props {
-//   userData: User
-// }
+
+export interface NotesContent {
+  revisedNotes: string;
+  flashcards: {
+    id: number
+    front:string
+    back: string
+   }[];
+  quizzes: {
+    question: string;
+    options: { text: string }[];
+    correctOption: number; // Index of the correct option
+  }[];
+  projectList: {
+    category: string;
+    title: string;
+    description: string;
+    steps: { context: string; description: string }[];
+  }[];
+  storytelling: {
+    title: string;
+    paragraphs: { text: string; prompt: string }[];
+  };
+}
+
 interface Props {
   userData: {
     imageUrl: string
@@ -52,18 +64,72 @@ interface Props {
     fullname: string | null
 
     email: string
-  }
-  notesEntry: {
-    revisedNotes: string
-    flashcards: string
-    projectList: string
-    storytelling: string
+  },
+  // notesEntry: {
+  //   revisedNotes: string;
+  //   flashcards: {
+  //     id: number
+  //     front:String
+  //     back: String
+  //    }[];
+  //   quizzes: {
+  //     question: string;
+  //     options: { text: string }[];
+  //     correctOption: number; // Index of the correct option
+  //   }[];
+  //   projectList: {
+  //     category: string;
+  //     title: string;
+  //     description: string;
+  //     steps: { context: string; description: string }[];
+  //   }[];
+  //   storytelling: {
+  //     title: string;
+  //     paragraphs: { text: string; prompt: string }[];
+  //   };
+  // }
+  serializedData:string
+}
+
+type NotesDataType = {
+  revisedNotes: string
+  flashcards: Array<{
+    id: number
+    front: string
+    back: string
+  }>
+  quizzes: Array<{
+    question: string
+    options: string[]
+    correctOption: number
+  }>
+  projectList: Array<{
+    category: string
+    title: string
+    description: string
+    steps: string[]
+  }>
+  storytelling: {
+    title: string
+    paragraphs: Array<{
+      text: string
+      image: string
+    }>
   }
 }
 
-export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
+
+// export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
+export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
+
+
+  console.log("serialized data: ", serializedData)
+  const NotesData: NotesDataType = JSON.parse(serializedData);
+
+  console.log(NotesData);
+
   const [selectedMode, setSelectedMode] = useState<Mode>('notes')
-  const [currentCard, setCurrentCard] = useState(0)
+  // const [currentCard, setCurrentCard] = useState(0)
   const [currentQuiz, setCurrentQuiz] = useState(0)
   const [score, setScore] = useState(0)
 
@@ -74,38 +140,38 @@ export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
     { icon: Clapperboard, label: 'Story Mode', mode: 'story' }
   ]
 
-  const flashcards = [
-    {
-      front: 'What is React?',
-      back: 'A JavaScript library for building user interfaces'
-    },
-    {
-      front: 'What is JSX?',
-      back: 'A syntax extension for JavaScript that allows you to write HTML-like code'
-    },
-    {
-      front: 'What are hooks?',
-      back: 'Functions that allow you to use state and other React features in functional components'
-    }
-  ]
+  // const flashcards = [
+  //   {
+  //     front: 'What is React?',
+  //     back: 'A JavaScript library for building user interfaces'
+  //   },
+  //   {
+  //     front: 'What is JSX?',
+  //     back: 'A syntax extension for JavaScript that allows you to write HTML-like code'
+  //   },
+  //   {
+  //     front: 'What are hooks?',
+  //     back: 'Functions that allow you to use state and other React features in functional components'
+  //   }
+  // ]
 
-  const quizQuestions = [
-    {
-      question: 'Which hook is used for side effects in React?',
-      options: ['useState', 'useEffect', 'useContext', 'useReducer'],
-      correct: 1
-    },
-    {
-      question: 'What does JSX stand for?',
-      options: [
-        'JavaScript XML',
-        'Java Syntax Extension',
-        'JavaScript Extension',
-        'Java XML'
-      ],
-      correct: 0
-    }
-  ]
+  // const quizQuestions = [
+  //   {
+  //     question: 'Which hook is used for side effects in React?',
+  //     options: ['useState', 'useEffect', 'useContext', 'useReducer'],
+  //     correct: 1
+  //   },
+  //   {
+  //     question: 'What does JSX stand for?',
+  //     options: [
+  //       'JavaScript XML',
+  //       'Java Syntax Extension',
+  //       'JavaScript Extension',
+  //       'Java XML'
+  //     ],
+  //     correct: 0
+  //   }
+  // ]
 
   // const notes = [
   //   'React is a JavaScript library for building user interfaces',
@@ -116,12 +182,6 @@ export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
   //   'Props are read-only and flow down the component tree',
   //   'State can be managed locally or globally'
   // ]
-
-  // const user = {
-  //   name: 'mahendra',
-  //   email: 'mahendra@gmail.com',
-  //   imgsrc: ''
-  // }
 
   const Sidebar = ({ className = '' }) => (
     <div
@@ -167,20 +227,7 @@ export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
           <p className='text-sm font-medium'>{userData.fullname}</p>
           <p className='text-xs text-muted-foreground'>{userData.email}</p>
         </div>
-        {/* <Button variant='ghost' size='icon'>
-          <LogOut className='h-4 w-4' />
-        </Button> */}
-        {/* <Button
-          variant={'default'}
-          className='mt-1 bg-transparent hover:bg-gray-300 text-gray-800  dark:text-gray-200 dark:hover:text-gray-900  px-4 py-2 text-sm w-full '
-          onClick={() => { signOut ({ redirectUrl: '/' })
-            // redirect('/')
-          }}
-        >
-          <span className='flex justify-left items-center gap-2'>
-            <LogOut /> Sign out
-          </span>
-        </Button> */}
+        
         <SignOutButton redirectUrl='/'>
           <div className=' cursor-pointer'>
             <LogOut className='w-5 h-5 opacity-75 hover:opacity-100' />
@@ -232,7 +279,7 @@ export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
                 Revision Notes
               </h2>
               {/* {notesEntry.revisedNotes} */}
-              <RevisionNotes content={notesEntry.revisedNotes} />
+              <RevisionNotes content={NotesData.revisedNotes} />
               {/* {notesEntry.revisedNotes.map((note, index) => (
                 <motion.div
                   key={index}
@@ -286,7 +333,7 @@ export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
                 </h2>
                 <main className='flex h-[34rem] flex-col items-center justify-center '>
                   <div className=' w-full flex justify-center items-center'>
-                    <CardStack flashcardString={notesEntry.flashcards}/>
+                    <CardStack flashcard={NotesData.flashcards}/>
                   </div>
                 </main>
                 <div className='flex  w-full justify-center'>
@@ -319,16 +366,16 @@ export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
                   Quiz Time
                 </h2>
                 <div className='text-base md:text-lg font-semibold'>
-                  Score: {score}/{quizQuestions.length}
+                  {/* Score: {score}/{quizQuestions.length} */}
                 </div>
               </div>
 
               <Card className='p-4 md:p-6 backdrop-blur-sm bg-card/50'>
                 <h3 className='text-lg md:text-xl mb-6'>
-                  {quizQuestions[currentQuiz].question}
+                  {/* {quizQuestions[currentQuiz].question} */}
                 </h3>
                 <div className='space-y-3'>
-                  {quizQuestions[currentQuiz].options.map((option, index) => (
+                  {/* {quizQuestions[currentQuiz].options.map((option, index) => (
                     <motion.div
                       key={index}
                       whileHover={{ scale: 1.02 }}
@@ -345,11 +392,12 @@ export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
                             prev => (prev + 1) % quizQuestions.length
                           )
                         }}
-                      >
+                      > 
                         {option}
-                      </Button>
-                    </motion.div>
+                       </Button>
+                    </motion.div> 
                   ))}
+                    */}
                 </div>
               </Card>
             </motion.div>
@@ -394,5 +442,7 @@ export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
         </AnimatePresence>
       </div>
     </div>
+
+    
   )
 }

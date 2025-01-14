@@ -8,7 +8,6 @@ import { Card } from '@/components/ui/card'
 import { toast } from 'sonner'
 import axios from 'axios'
 import { Youtube } from 'lucide-react'
-import { redirect } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 
 function DashboardContent () {
@@ -55,7 +54,7 @@ function DashboardContent () {
 
       setLoading(false)
     } catch (error) {
-      console.log('Error aa gya bhai....', e)
+      console.log('Error aa gya bhai....', error)
       setLoading(false)
     }
   }
