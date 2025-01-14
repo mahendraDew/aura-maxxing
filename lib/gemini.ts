@@ -324,7 +324,7 @@ export async function getGeminiData (transcript: string) {
               -  Simplify the concepts while maintaining accuracy.
               -  Ensure the content is entirely child-friendly (no offensive or 18+ content).
           - The story should include:
-              -  Fun characters (e.g., a curious robot, a coding wizard, or a talking computer, etc.).
+              -  Fun characters (e.g., a curious robot, a coding wizard, or a talking computer, etc.) generate the characters based on the trascript.
               -  Real-world analogies to simplify programming concepts.
               -  Clear takeaways for understanding the topic in each section of the transcript.
           - At key moments in the story, suggest short prompts to generate kid-friendly illustrations, cartoon or anime style image, that visually represent the current topic or scene in the story (should look entertaining and cartoonish and this should be free from any offensive or inappropriate content, as this content may be used for educational purposes, including children. Avoid adding any 18+ or obscene material ).
@@ -345,17 +345,17 @@ export async function getGeminiData (transcript: string) {
         - Be structured into paragraphs that explain key concepts in a fun, relatable way.
         - Include a prompt for an illustration that matches each paragraph.
   
-        Example Format:
+        Example Format (these are just for examples its not strict to use name 'bolt'):
         {
           "title": "The Case of the Missing Email: A Node.js Adventure!",
           "paragraphs": [
             {
               "text": "Once upon a time, in the land of coding, lived a super-smart robot named Bolt...",
-              "prompt": "Illustration of Bolt, a friendly robot with glowing eyes, looking excitedly at a computer screen displaying the words 'Node Mailer'."
+              "prompt": "A Cartoon/anime style illustration of Bolt, a friendly robot with glowing eyes, looking excitedly at a computer screen displaying the words 'Node Mailer'."
             },
             {
               "text": "Bolt wanted to send a simple 'Hello, World!' email...",
-              "prompt": "Illustration of Bolt writing a 'Hello, World!' email with colorful HTML code, using backticks as special magic markers."
+              "prompt": "A Cartoon/anime style illustration of Bolt writing a 'Hello, World!' email with colorful HTML code, using backticks as special magic markers."
             }
           ]
         }

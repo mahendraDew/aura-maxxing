@@ -59,6 +59,67 @@ export async function POST (req: Request) {
     const geminiData = await getGeminiData(transcriptData)
     // console.log("geminiData:", geminiData)
 
+  //   const storytelling: {
+  //     title: string;
+  //     paragraphs: {
+  //         prompt: string;
+  //         text: string;
+  //     }[];
+  // } | undefined
+  //  = geminiData?.story;
+
+
+    // if (!storytelling || storytelling.paragraphs.length === 0) {
+    //   return NextResponse.json({ message: "No storytelling content generated." }, { status: 400 });
+    // }
+
+    // console.log("Generating images for storytelling prompts...");
+    // const imageUrls = [];
+
+    // const magicLoopsUrl = process.env.MAGIC_LOOP_URL!;
+
+    // for (const story of geminiData?.story.paragraphs!) {
+    //   const { prompt } = story;
+    //   const response = await axios.post('https://magicloops.dev/api/loop/c134bf78-8d5e-4414-ade8-be4ec6855ad7/run', { prompt });
+
+    //   if (response.data?.imageUrl) {
+    //     imageUrls.push(response.data.imageUrl);
+    //   } else {
+    //     console.warn(`Image generation failed for prompt: ${prompt}`);
+    //   }
+    // }
+    // console.log("images generated...");
+
+    // console.log("Image URLs:", imageUrls);
+
+    // Create an array of promises for all image generation requests
+  // // const imageRequests = storytelling.paragraphs.map(async (story) => {
+  // //   const { prompt } = story;
+  // //   try {
+  // //     const response = await axios.post(magicLoopsUrl, { prompt });
+  // //     if (response.data?.imageUrl) {
+  // //       return response.data.imageUrl; // Resolve with image URL
+  // //     } else {
+  // //       console.warn(`Image generation failed for prompt: ${prompt}`);
+  // //       return null; // Resolve with null if generation fails
+  // //     }
+  // //   } catch (error) {
+  // //     console.error(`Error generating image for prompt: ${prompt}`, error);
+  // //     return null; // Resolve with null if an error occurs
+  // //   }
+  // // });
+
+  // // Wait for all promises to resolve
+  // const imageUrls = await Promise.all(imageRequests);
+
+  // console.log("Images generated...");
+  // console.log("Image URLs:", imageUrls);
+
+  // // Filter out any null values in the result
+  // const validImageUrls = imageUrls.filter((url) => url !== null);
+
+  // console.log("valid image urls:", validImageUrls)
+
     //2.1: store the gemini generated text in db:
     // console.log('parsing the flashcard...')
     // const flashcards = parseFlashcardsFromString(geminiData?.flashCard!)
@@ -74,6 +135,37 @@ export async function POST (req: Request) {
       projectList: geminiData?.projectList,
       storytelling: geminiData?.story
     })
+
+
+    // const storytelling = [
+    //   {
+    //     text: "Once upon a time, in the magical land of coding, lived a curious robot named Bolt. Bolt loved to explore new things, and one day he stumbled upon a mysterious box labeled 'GPT-3'.  Curious, Bolt opened it, and inside was a powerful tool that could generate text just like a human!",
+    //     prompt: "Illustration of a friendly robot named Bolt, excitedly looking at a computer screen showing the words 'GPT-3'."
+    //   },
+    //   {
+    //     text: "Bolt quickly learned that GPT-3 was a 'pre-trained generative transformer.'  This meant it had learned from a HUGE pile of data – like reading millions of books!  The more it read, the better it got at writing and understanding language. Think of it as learning to write by reading all the stories in the world!",
+    //     prompt: "Illustration of Bolt looking at a huge pile of data books, with a robot teacher explaining how the model learns from data."
+    //   }
+    // ]
+    
+    
+
+    //#2: Fetch Data from Magic Loops
+    // console.log('Image generation Magic Loops...');
+    // const magicLoopsUrl = process.env.MAGIC_LOOP_URL!;
+
+    
+
+    // const magicLoopsResponse = await axios.post(magicLoopsUrl, {
+    //   input: transcriptData,
+    // });
+
+    // const magicLoopsResult = magicLoopsResponse.data;
+    // console.log('Magic Loops API Response:', magicLoopsResult);
+   
+
+    // const responseJson = await magicLoopsResult.json();
+    // console.log(responseJson);
 
     // console.log("transcriptData:", transcriptData)
     return NextResponse.json({ notesDataId: NotesData._id }, { status: 200 })

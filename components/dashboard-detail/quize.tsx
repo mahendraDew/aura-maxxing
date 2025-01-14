@@ -19,7 +19,7 @@ type Props = {
 // export function CardStack ({ flashcard }: Props) {
 
 export function Quiz ({ questions }: Props) {
-  console.log('quizes from quize: ', questions)
+  // console.log('quizes from quize: ', questions)
 
   const [showTotalScore, setShowTotalScore] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -28,7 +28,7 @@ export function Quiz ({ questions }: Props) {
   const [score, setScore] = useState(0)
 
   const handleSubmit = () => {
-    console.log('submit')
+    // console.log('submit')
     if (selectedOption === questions[currentQuestion].correctOption) {
       setScore(prev => prev + 1)
     }
@@ -39,7 +39,7 @@ export function Quiz ({ questions }: Props) {
   }
 
   const handleNext = () => {
-    console.log('next')
+    // console.log('next')
     setCurrentQuestion(prev => prev + 1)
     setSelectedOption(null)
     setShowResult(false)

@@ -108,7 +108,7 @@ export default async function DashboardDetail ({params}: {params: Promise<{ id: 
   //     }
   //   }
     
-  console.log("quizzz:", notesEntry.quizzes)
+  // console.log("quizzz:", notesEntry.quizzes)
 
 
   return (

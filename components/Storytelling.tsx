@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -15,20 +15,20 @@ interface StoryTellingProps {
 
 export function StoryTelling({ story }: StoryTellingProps) {
   const [currentPage, setCurrentPage] = useState(0)
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
+  // const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
 
-  useEffect(() => {
-    // Simulating Beatoven API for dramatic background music
-    const audioElement = new Audio('/dramatic-music.mp3')
-    setAudio(audioElement)
-    audioElement.loop = true
-    audioElement.play()
+  // useEffect(() => {
+  //   // Simulating Beatoven API for dramatic background music
+  //   // const audioElement = new Audio('/dramatic-music.mp3')
+  //   // setAudio(audioElement)
+  //   audioElement.loop = true
+  //   audioElement.play()
 
-    return () => {
-      audioElement.pause()
-      audioElement.currentTime = 0
-    }
-  }, [])
+  //   return () => {
+  //     audioElement.pause()
+  //     audioElement.currentTime = 0
+  //   }
+  // }, [])
 
   const nextPage = () => {
     setCurrentPage((prev) => (prev + 1) % story.length)

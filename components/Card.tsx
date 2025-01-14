@@ -14,7 +14,7 @@ interface CardProps {
 export function Card({ front, back, index, onSwipe }: CardProps) {
   const [isFlipped, setIsFlipped] = useState(false)
 
-  const handleDragEnd = (event: any, info: any) => {
+  const handleDragEnd = (event: DragEvent, info: { offset: { x: number }, velocity: { x: number } }) => {
     if (info.offset.x > 100) {
       onSwipe('right')
     } else if (info.offset.x < -100) {

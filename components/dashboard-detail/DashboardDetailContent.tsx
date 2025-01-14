@@ -25,13 +25,11 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import ModeToggle from '@/components/ui/ModeToggle'
-import Image from 'next/image'
 import { SignOutButton } from '@clerk/nextjs'
 import RevisionNotes from '../RevisionNotes'
 import { CardStack } from '../CardStack'
 import { Quiz } from './quize'
 import ProjectSection from './ProjectSection'
-import { Card } from '../ui/card'
 import StorySection from './StorySection'
 // import { Quiz } from './quize'
 // import { NotesContent } from '@/modal/schema'
@@ -119,7 +117,7 @@ type NotesDataType = {
     title: string
     paragraphs: Array<{
       text: string
-      image: string
+      prompt: string
     }>
   }
 }
@@ -130,33 +128,49 @@ export const dummyStory = {
   paragraphs: [
     {
       text: "In the early days of computing, machines were hulking behemoths, filling entire rooms with their vacuum tubes and punch cards.",
-      image: "/img/1.jpeg"
+      prompt: "/img/1.jpeg"
     },
     {
       text: "As technology advanced, computers shrank in size but grew in power. The personal computer revolution brought these machines into homes and offices around the world.",
-      image: "/img/placeholder.webp"
+      prompt: "/img/placeholder.webp"
     },
     {
       text: "The internet emerged, connecting these computers and creating a global network of information and communication.",
-      image: "/img/placeholder-2.webp"
+      prompt: "/img/placeholder-2.webp"
     },
     {
       text: "With the rise of big data and machine learning, artificial intelligence began to take shape, promising to revolutionize every aspect of our lives.",
-      image: "/img/placeholder-3.webp"
+      prompt: "/img/placeholder-3.webp"
     },
     {
       text: "Today, AI assistants like myself are capable of understanding and generating human-like text, opening up new possibilities for human-machine interaction.",
-      image: "/img/placeholder-4.webp"
+      prompt: "/img/placeholder-4.webp"
     },
     {
       text: "As we look to the future, the potential of AI seems limitless. From solving complex scientific problems to creating art, the AI revolution is just beginning.",
-      image: "/img/placeholder-5.webp"
+      prompt: "/img/placeholder-5.webp"
     }
   ]
 };
 
 
+const dummyimages = [{
+prompt: "/img/1.jpeg"
+}
+, {
+  prompt: "/img/placeholder.webp"
 
+},{
+  prompt: "/img/placeholder-2.webp"
+},{
+  prompt: "/img/placeholder-3.webp"
+},{
+  prompt: "/img/placeholder-4.webp"
+},{
+  prompt: "/img/placeholder-5.webp"
+
+},
+]
 
 // export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
 export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
@@ -464,7 +478,8 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
                 </Card>
               </div> */}
               {/* <StorySection  story={NotesData.storytelling}/> */}
-              <StorySection  story={dummyStory}/>
+              {/* <StorySection  story={dummyStory}/> */}
+              <StorySection  images={dummyimages} story={NotesData.storytelling}/>
             </div>
           )}
         </AnimatePresence>

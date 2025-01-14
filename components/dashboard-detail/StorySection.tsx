@@ -11,23 +11,99 @@ interface StoryProps {
     title: string
     paragraphs: Array<{
       text: string
-      image: string
+      prompt: string
     }>
-  }
+  }, 
+  images: {
+    prompt: string;
+}[]
 }
 
-export default function StorySection({ story }: StoryProps) {
+// export default function StorySection ({ story }: StoryProps) {
+export default function StorySection ({ story, images }: StoryProps) {
   const [currentPage, setCurrentPage] = useState(0)
   const [direction, setDirection] = useState(1) // 1 for right, -1 for left
   const [isPlaying, setIsPlaying] = useState(true)
   const [showPlayAgain, setShowPlayAgain] = useState(false)
   const textRef = useRef<HTMLDivElement>(null)
 
+  // const images: string[] = []
+
+  // useEffect(() => {
+  //   const fetchImages = async () => {
+  //     try {
+  //       const magicLoopsUrl = process.env.MAGIC_LOOP_URL!
+
+
+  //       const prompts = story.paragraphs.map(paragraph => paragraph.prompt)
+
+
+  //       console.log("propppppt:", prompts)
+
+  //       try {
+  //         const response = await axios.post("/api/fetch-images", {prompts})
+  //         const data = await response.data
+
+  //         console.log("data from new api: ", data);
+  //       } catch (error) {
+  //         console.log("errrrrrrrr: ", error)
+  //       }
+        
+        
+  //       // Fetch images for each paragraph's prompt
+  //       // const imagePromises = story.paragraphs.map(async paragraph => {
+  //       //   try {
+  //       //     const response = await axios.post(magicLoopsUrl, {
+  //       //       prompt: paragraph.prompt
+  //       //     })
+  //       //     if (response.data?.imageUrl) {
+  //       //       images.push(
+  //       //         response.data.imageUrl // Store image URL in paragraph object
+  //       //       )
+  //       //     } else {
+  //       //       console.warn(
+  //       //         `Image generation failed for prompt: ${paragraph.prompt}`
+  //       //       )
+  //       //     }
+  //       //   } catch (error) {
+  //       //     console.error(
+  //       //       `Error fetching image for prompt: ${paragraph.prompt}`,
+  //       //       error
+  //       //     )
+  //       //   }
+  //       // })
+
+  //       // await Promise.all(imagePromises)
+
+  //       try {
+  //         const response = await axios.post('https://magicloops.dev/api/loop/59db37cf-e2ba-4870-9f8c-4b7bbfe4b70d/run', {
+  //           prompt: story.paragraphs[0].prompt
+  //         })
+
+  //         const data = await response.data;
+
+  //         console.log("img data: ", data);
+          
+          
+  //       } catch (error) {
+  //         console.log("error aaaaa: ", error)
+  //       }
+
+  //       // setLoadingImages(false) // Set loading to false after images are fetched
+  //     } catch (error) {
+  //       console.error('Error fetching images:', error)
+  //       // setLoadingImages(false) // Set loading to false if there's an error
+  //     }
+  //   }
+
+  //   fetchImages()
+  // }, [])
+
   useEffect(() => {
     let timer: NodeJS.Timeout
     if (isPlaying) {
       timer = setInterval(() => {
-        setCurrentPage((prev) => {
+        setCurrentPage(prev => {
           if (prev + 1 >= story.paragraphs.length) {
             setIsPlaying(false)
             setShowPlayAgain(true)
@@ -35,7 +111,7 @@ export default function StorySection({ story }: StoryProps) {
           }
           return prev + 1
         })
-        setDirection((prev) => prev * -1) // Alternate direction
+        setDirection(prev => prev * -1) // Alternate direction
       }, 10000) // Change image every 10 seconds
     }
     return () => clearInterval(timer)
@@ -55,13 +131,12 @@ export default function StorySection({ story }: StoryProps) {
   }
 
   return (
-
-    <Card className="bg-card text-card-foreground">
+    <Card className='bg-card text-card-foreground'>
       <CardHeader>
         <CardTitle>{story.title}</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="relative w-full h-[32rem] max-h-[32rem] overflow-hidden rounded-lg">
+      <CardContent className='space-y-4'>
+        <div className='relative w-full h-[32rem] max-h-[32rem] overflow-hidden rounded-lg'>
           <AnimatePresence initial={false}>
             <motion.div
               key={currentPage}
@@ -77,29 +152,30 @@ export default function StorySection({ story }: StoryProps) {
                   transition: { duration: 20, repeat: Infinity }
                 }}
                 className='absolute inset-0'
+                
               >
                 <Image
-                  src={story.paragraphs[currentPage].image}
+                  src={images[currentPage].prompt}
                   alt={`Story illustration ${currentPage + 1}`}
-                  layout="fill"
-                  objectFit="cover"
+                  layout='fill'
+                  objectFit='cover'
                 />
               </motion.div>
             </motion.div>
           </AnimatePresence>
         </div>
-        <div 
+        <div
           ref={textRef}
-          className="h-48 overflow-y-auto space-y-2 p-4 bg-muted rounded-lg"
+          className='h-48 overflow-y-auto space-y-2 p-4 bg-muted rounded-lg'
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode='wait'>
             <motion.p
               key={currentPage}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1 }}
-              className="text-sm"
+              className='text-sm'
             >
               {story.paragraphs[currentPage].text}
             </motion.p>
@@ -108,16 +184,16 @@ export default function StorySection({ story }: StoryProps) {
       </CardContent>
 
       {showPlayAgain && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="p-6">
+            <Card className='p-6'>
               <CardContent className='flex flex-col justify-center items-center'>
-                <h3 className="text-xl font-bold mb-4">Story Finished</h3>
+                <h3 className='text-xl font-bold mb-4'>Story Finished</h3>
                 <Button onClick={handlePlayAgain}>Play Again</Button>
               </CardContent>
             </Card>
@@ -126,7 +202,6 @@ export default function StorySection({ story }: StoryProps) {
       )}
     </Card>
 
-
+    
   )
 }
-
