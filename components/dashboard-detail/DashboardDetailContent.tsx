@@ -31,6 +31,8 @@ import RevisionNotes from '../RevisionNotes'
 import { CardStack } from '../CardStack'
 import { Quiz } from './quize'
 import ProjectSection from './ProjectSection'
+import { Card } from '../ui/card'
+import StorySection from './StorySection'
 // import { Quiz } from './quize'
 // import { NotesContent } from '@/modal/schema'
 type Mode = 'notes' | 'flashcards' | 'quiz' | 'story' | 'projects'
@@ -108,10 +110,10 @@ type NotesDataType = {
     correctOption: number
   }>
   projectList: Array<{
-    category: string;
-    title: string;
-    description: string;
-    steps: { context: string; description: string }[];
+    category: string
+    title: string
+    description: string
+    steps: { context: string; description: string }[]
   }>
   storytelling: {
     title: string
@@ -121,6 +123,40 @@ type NotesDataType = {
     }>
   }
 }
+
+
+export const dummyStory = {
+  title: "The AI Revolution: A Journey Through Time",
+  paragraphs: [
+    {
+      text: "In the early days of computing, machines were hulking behemoths, filling entire rooms with their vacuum tubes and punch cards.",
+      image: "/img/1.jpeg"
+    },
+    {
+      text: "As technology advanced, computers shrank in size but grew in power. The personal computer revolution brought these machines into homes and offices around the world.",
+      image: "/img/placeholder.webp"
+    },
+    {
+      text: "The internet emerged, connecting these computers and creating a global network of information and communication.",
+      image: "/img/placeholder-2.webp"
+    },
+    {
+      text: "With the rise of big data and machine learning, artificial intelligence began to take shape, promising to revolutionize every aspect of our lives.",
+      image: "/img/placeholder-3.webp"
+    },
+    {
+      text: "Today, AI assistants like myself are capable of understanding and generating human-like text, opening up new possibilities for human-machine interaction.",
+      image: "/img/placeholder-4.webp"
+    },
+    {
+      text: "As we look to the future, the potential of AI seems limitless. From solving complex scientific problems to creating art, the AI revolution is just beginning.",
+      image: "/img/placeholder-5.webp"
+    }
+  ]
+};
+
+
+
 
 // export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
 export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
@@ -234,7 +270,7 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
               exit={{ opacity: 0, y: -20 }}
               className='space-y-4'
             >
-              <h2 className='text-3xl font-bold mb-6 hidden md:block'>
+              <h2 className='text-3xl max-w-5xl font-bold mb-6 hidden md:block'>
                 Revision Notes
               </h2>
               {/* {notesEntry.revisedNotes} */}
@@ -287,7 +323,7 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
                   </div>
                 </Card> */}
               <div className=' max-h-screen'>
-                <h2 className='text-3xl font-bold mb-6 hidden md:block '>
+                <h2 className='text-3xl max-w-5xl font-bold mb-6 hidden md:block '>
                   Flash Cards
                 </h2>
                 <main className='flex h-[34rem] flex-col items-center justify-center '>
@@ -372,52 +408,64 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
             </>
           )}
           {selectedMode === 'projects' && (
-             <motion.div
-             key='projects'
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             exit={{ opacity: 0, y: -20 }}
-             className='max-w-4xl mx-auto px-4'
-           >
-             <ProjectSection projectList={NotesData.projectList} />
-           </motion.div>
+            <motion.div
+              key='projects'
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className='max-w-4xl mx-auto px-4'
+            >
+              <ProjectSection projectList={NotesData.projectList} />
+            </motion.div>
           )}
 
           {selectedMode === 'story' && (
-            <motion.div
-              key='story'
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className='relative h-[400px] md:h-[600px] overflow-hidden rounded-lg'
-            >
-              <motion.div
-                animate={{
-                  scale: [1, 1.1, 1],
-                  transition: { duration: 20, repeat: Infinity }
-                }}
-                className='absolute inset-0'
+            <div className='max-h-screen '>
+                <h2 className='text-3xl font-bold mb-6 hidden md:block '>
+                  Story Time
+                </h2>
+              {/* <motion.div
+                key='story'
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className='relative h-[400px] md:h-[600px] overflow-hidden rounded-lg'
               >
-                <Image
-                  width={700}
-                  height={400}
-                  src='https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1920&h=1080&fit=crop'
-                  alt='Story background'
-                  className='w-full h-full object-cover'
-                />
-              </motion.div>
+                <motion.div
+                  animate={{
+                    scale: [1, 1.1, 1],
+                    transition: { duration: 20, repeat: Infinity }
+                  }}
+                  className='absolute inset-0'
+                >
+                  <Image
+                    width={700}
+                    height={400}
+                    src='https://images.unsplash.com/photo-1719937051124-91c677bc58fc'
+                    alt='Story background'
+                    className='w-full h-full object-cover'
+                  />
+                </motion.div>
 
-              <motion.div
+                <motion.div
                 initial={{ y: '100%' }}
                 animate={{ y: '-100%' }}
                 transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
                 className='absolute inset-x-0 bottom-0 p-4 md:p-8 bg-gradient-to-t from-background/80 to-transparent'
               >
-                <p className='text-xl md:text-2xl font-bold text-center'>
-                  Embark on a journey through the fundamentals of React...
-                </p>
               </motion.div>
-            </motion.div>
+              </motion.div>
+              <div className='w-full h-64 mt-10 bg-red-300'>
+                <Card className='h-full w-full'>
+
+                <p className='text-xl md:text-2xl font-bold text-center'>
+                  
+                </p>
+                </Card>
+              </div> */}
+              {/* <StorySection  story={NotesData.storytelling}/> */}
+              <StorySection  story={dummyStory}/>
+            </div>
           )}
         </AnimatePresence>
       </div>
