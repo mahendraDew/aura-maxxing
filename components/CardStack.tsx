@@ -23,7 +23,7 @@ interface Props {
 }
 
 export function CardStack ({ flashcard }: Props) {
-  console.log('flashcard string: ', flashcard)
+  // console.log('flashcard string: ', flashcard)
 
   // const flashcards = parseFlashcards(flashcard)
 
@@ -57,7 +57,7 @@ export function CardStack ({ flashcard }: Props) {
   return (
     <div className='relative w-full  flex justify-center items-center m-10'>
       <AnimatePresence>
-        { cards.map((card, index) => (
+        { cards.map((card) => (
           <motion.div
             key={card.id}
             className='absolute  w-fit '

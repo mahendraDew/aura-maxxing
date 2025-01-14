@@ -119,18 +119,18 @@ export async function POST (req: Request) {
 // }
 
 
-function parseFlashcardsFromString(flashcardData: string): { id: number; front: string; back: string }[] {
-  const flashcardPattern = /Flashcard (\d+):\s*Front: (.+?)\s*Back: (.+?)(?=\nFlashcard|\n?$)/gs
-  const flashcards = []
+// function parseFlashcardsFromString(flashcardData: string): { id: number; front: string; back: string }[] {
+//   const flashcardPattern = /Flashcard (\d+):\s*Front: (.+?)\s*Back: (.+?)(?=\nFlashcard|\n?$)/gs
+//   const flashcards = []
 
-  let match
-  while ((match = flashcardPattern.exec(flashcardData)) !== null) {
-    const id = parseInt(match[1], 10)
-    const front = match[2].trim()
-    const back = match[3].trim()
+//   let match
+//   while ((match = flashcardPattern.exec(flashcardData)) !== null) {
+//     const id = parseInt(match[1], 10)
+//     const front = match[2].trim()
+//     const back = match[3].trim()
 
-    flashcards.push({ id, front, back })
-  }
+//     flashcards.push({ id, front, back })
+//   }
 
-  return flashcards
-}
+//   return flashcards
+// }

@@ -11,7 +11,7 @@ interface QuizProps {
   questions: {
     question: string
     options: string[]
-    correctAnswer: number
+    correctOption: number
   }[]
 }
 
@@ -58,7 +58,7 @@ export function Quiz({ questions }: QuizProps) {
           </RadioGroup>
           {showResult && (
             <p className="mt-4 font-bold">
-              {selectedAnswer === questions[currentQuestion].correctAnswer
+              {selectedAnswer === questions[currentQuestion].correctOption
                 ? 'Correct!'
                 : 'Incorrect. Try again!'}
             </p>

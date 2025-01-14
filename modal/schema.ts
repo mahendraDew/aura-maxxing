@@ -136,7 +136,11 @@ const VideoNotesSchema = new Schema<VideoNotes>(
       back: { type: String, required: true }
     }],
     // flashcards: [{type:String}],
-    quizzes: [QuizSchema], // Array of quizzes
+    quizzes: [{
+      question: { type: String, required: true },
+      options: [{ text: String }],
+      correctOption: { type: Number, required: true }, // Index of the correct option (0-3)
+    }], // Array of quizzes
     projectList: [ProjectSchema], // Array of structured projects
 
     storytelling: {

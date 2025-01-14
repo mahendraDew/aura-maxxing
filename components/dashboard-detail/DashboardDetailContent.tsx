@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -29,32 +28,33 @@ import Image from 'next/image'
 import { SignOutButton } from '@clerk/nextjs'
 import RevisionNotes from '../RevisionNotes'
 import { CardStack } from '../CardStack'
+import { Quiz } from './quize'
+// import { Quiz } from './quize'
 // import { NotesContent } from '@/modal/schema'
 type Mode = 'notes' | 'flashcards' | 'quiz' | 'story'
 
-
 export interface NotesContent {
-  revisedNotes: string;
+  revisedNotes: string
   flashcards: {
     id: number
-    front:string
+    front: string
     back: string
-   }[];
+  }[]
   quizzes: {
-    question: string;
-    options: { text: string }[];
-    correctOption: number; // Index of the correct option
-  }[];
+    question: string
+    options: { text: string }[]
+    correctOption: number // Index of the correct option
+  }[]
   projectList: {
-    category: string;
-    title: string;
-    description: string;
-    steps: { context: string; description: string }[];
-  }[];
+    category: string
+    title: string
+    description: string
+    steps: { context: string; description: string }[]
+  }[]
   storytelling: {
-    title: string;
-    paragraphs: { text: string; prompt: string }[];
-  };
+    title: string
+    paragraphs: { text: string; prompt: string }[]
+  }
 }
 
 interface Props {
@@ -64,7 +64,7 @@ interface Props {
     fullname: string | null
 
     email: string
-  },
+  }
   // notesEntry: {
   //   revisedNotes: string;
   //   flashcards: {
@@ -88,7 +88,7 @@ interface Props {
   //     paragraphs: { text: string; prompt: string }[];
   //   };
   // }
-  serializedData:string
+  serializedData: string
 }
 
 type NotesDataType = {
@@ -100,7 +100,9 @@ type NotesDataType = {
   }>
   quizzes: Array<{
     question: string
-    options: string[]
+    options: {
+      text: string
+    }[]
     correctOption: number
   }>
   projectList: Array<{
@@ -118,20 +120,17 @@ type NotesDataType = {
   }
 }
 
-
 // export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
 export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
+  // console.log("serialized data: ", serializedData)
+  const NotesData: NotesDataType = JSON.parse(serializedData)
 
-
-  console.log("serialized data: ", serializedData)
-  const NotesData: NotesDataType = JSON.parse(serializedData);
-
-  console.log(NotesData);
+  // console.log(NotesData);
 
   const [selectedMode, setSelectedMode] = useState<Mode>('notes')
   // const [currentCard, setCurrentCard] = useState(0)
-  const [currentQuiz, setCurrentQuiz] = useState(0)
-  const [score, setScore] = useState(0)
+  // const [currentQuiz, setCurrentQuiz] = useState(0)
+  // const [score, setScore] = useState(0)
 
   const sidebarItems = [
     { icon: BookOpen, label: 'Revise Notes', mode: 'notes' },
@@ -139,49 +138,6 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
     { icon: BrainCircuit, label: 'Quiz', mode: 'quiz' },
     { icon: Clapperboard, label: 'Story Mode', mode: 'story' }
   ]
-
-  // const flashcards = [
-  //   {
-  //     front: 'What is React?',
-  //     back: 'A JavaScript library for building user interfaces'
-  //   },
-  //   {
-  //     front: 'What is JSX?',
-  //     back: 'A syntax extension for JavaScript that allows you to write HTML-like code'
-  //   },
-  //   {
-  //     front: 'What are hooks?',
-  //     back: 'Functions that allow you to use state and other React features in functional components'
-  //   }
-  // ]
-
-  // const quizQuestions = [
-  //   {
-  //     question: 'Which hook is used for side effects in React?',
-  //     options: ['useState', 'useEffect', 'useContext', 'useReducer'],
-  //     correct: 1
-  //   },
-  //   {
-  //     question: 'What does JSX stand for?',
-  //     options: [
-  //       'JavaScript XML',
-  //       'Java Syntax Extension',
-  //       'JavaScript Extension',
-  //       'Java XML'
-  //     ],
-  //     correct: 0
-  //   }
-  // ]
-
-  // const notes = [
-  //   'React is a JavaScript library for building user interfaces',
-  //   'Components are the building blocks of React applications',
-  //   'Virtual DOM is used for efficient rendering',
-  //   'Hooks were introduced in React 16.8',
-  //   'useEffect handles side effects in functional components',
-  //   'Props are read-only and flow down the component tree',
-  //   'State can be managed locally or globally'
-  // ]
 
   const Sidebar = ({ className = '' }) => (
     <div
@@ -227,7 +183,7 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
           <p className='text-sm font-medium'>{userData.fullname}</p>
           <p className='text-xs text-muted-foreground'>{userData.email}</p>
         </div>
-        
+
         <SignOutButton redirectUrl='/'>
           <div className=' cursor-pointer'>
             <LogOut className='w-5 h-5 opacity-75 hover:opacity-100' />
@@ -333,7 +289,7 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
                 </h2>
                 <main className='flex h-[34rem] flex-col items-center justify-center '>
                   <div className=' w-full flex justify-center items-center'>
-                    <CardStack flashcard={NotesData.flashcards}/>
+                    <CardStack flashcard={NotesData.flashcards} />
                   </div>
                 </main>
                 <div className='flex  w-full justify-center'>
@@ -354,7 +310,8 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
           )}
 
           {selectedMode === 'quiz' && (
-            <motion.div
+            <>
+              {/* <motion.div
               key='quiz'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -366,16 +323,16 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
                   Quiz Time
                 </h2>
                 <div className='text-base md:text-lg font-semibold'>
-                  {/* Score: {score}/{quizQuestions.length} */}
+                  Score: {score}/{quizQuestions.length}
                 </div>
               </div>
 
               <Card className='p-4 md:p-6 backdrop-blur-sm bg-card/50'>
                 <h3 className='text-lg md:text-xl mb-6'>
-                  {/* {quizQuestions[currentQuiz].question} */}
+                {quizQuestions[currentQuiz].question}
                 </h3>
                 <div className='space-y-3'>
-                  {/* {quizQuestions[currentQuiz].options.map((option, index) => (
+                  {quizQuestions[currentQuiz].options.map((option, index) => (
                     <motion.div
                       key={index}
                       whileHover={{ scale: 1.02 }}
@@ -397,10 +354,19 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
                        </Button>
                     </motion.div> 
                   ))}
-                    */}
+                   
                 </div>
               </Card>
-            </motion.div>
+            </motion.div> */}
+
+              <div className=' max-h-screen'>
+                <h2 className='text-3xl font-bold mb-6 hidden md:block '>
+                  Quiz
+                </h2>
+                {/* <Quiz questions={NotesData.quizzes} /> */}
+                <Quiz questions={NotesData.quizzes} />
+              </div>
+            </>
           )}
 
           {selectedMode === 'story' && (
@@ -442,7 +408,5 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
         </AnimatePresence>
       </div>
     </div>
-
-    
   )
 }
