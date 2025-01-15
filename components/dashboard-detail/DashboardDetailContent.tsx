@@ -122,54 +122,55 @@ type NotesDataType = {
   }
 }
 
-
 export const dummyStory = {
-  title: "The AI Revolution: A Journey Through Time",
+  title: 'The AI Revolution: A Journey Through Time',
   paragraphs: [
     {
-      text: "In the early days of computing, machines were hulking behemoths, filling entire rooms with their vacuum tubes and punch cards.",
-      prompt: "/img/1.jpeg"
+      text: 'In the early days of computing, machines were hulking behemoths, filling entire rooms with their vacuum tubes and punch cards.',
+      prompt: '/img/1.jpeg'
     },
     {
-      text: "As technology advanced, computers shrank in size but grew in power. The personal computer revolution brought these machines into homes and offices around the world.",
-      prompt: "/img/placeholder.webp"
+      text: 'As technology advanced, computers shrank in size but grew in power. The personal computer revolution brought these machines into homes and offices around the world.',
+      prompt: '/img/placeholder.webp'
     },
     {
-      text: "The internet emerged, connecting these computers and creating a global network of information and communication.",
-      prompt: "/img/placeholder-2.webp"
+      text: 'The internet emerged, connecting these computers and creating a global network of information and communication.',
+      prompt: '/img/placeholder-2.webp'
     },
     {
-      text: "With the rise of big data and machine learning, artificial intelligence began to take shape, promising to revolutionize every aspect of our lives.",
-      prompt: "/img/placeholder-3.webp"
+      text: 'With the rise of big data and machine learning, artificial intelligence began to take shape, promising to revolutionize every aspect of our lives.',
+      prompt: '/img/placeholder-3.webp'
     },
     {
-      text: "Today, AI assistants like myself are capable of understanding and generating human-like text, opening up new possibilities for human-machine interaction.",
-      prompt: "/img/placeholder-4.webp"
+      text: 'Today, AI assistants like myself are capable of understanding and generating human-like text, opening up new possibilities for human-machine interaction.',
+      prompt: '/img/placeholder-4.webp'
     },
     {
-      text: "As we look to the future, the potential of AI seems limitless. From solving complex scientific problems to creating art, the AI revolution is just beginning.",
-      prompt: "/img/placeholder-5.webp"
+      text: 'As we look to the future, the potential of AI seems limitless. From solving complex scientific problems to creating art, the AI revolution is just beginning.',
+      prompt: '/img/placeholder-5.webp'
     }
   ]
-};
-
-
-const dummyimages = [{
-prompt: "/img/1.jpeg"
 }
-, {
-  prompt: "/img/placeholder.webp"
 
-},{
-  prompt: "/img/placeholder-2.webp"
-},{
-  prompt: "/img/placeholder-3.webp"
-},{
-  prompt: "/img/placeholder-4.webp"
-},{
-  prompt: "/img/placeholder-5.webp"
-
-},
+const dummyimages = [
+  {
+    prompt: '/img/1.jpeg'
+  },
+  {
+    prompt: '/img/placeholder.webp'
+  },
+  {
+    prompt: '/img/placeholder-2.webp'
+  },
+  {
+    prompt: '/img/placeholder-3.webp'
+  },
+  {
+    prompt: '/img/placeholder-4.webp'
+  },
+  {
+    prompt: '/img/placeholder-5.webp'
+  }
 ]
 
 // export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
@@ -232,16 +233,21 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
             {userData.fullname?.split('')[0].toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <div className='flex-1'>
-          <p className='text-sm font-medium'>{userData.fullname}</p>
-          <p className='text-xs text-muted-foreground'>{userData.email}</p>
+        <div className='flex-1 min-w-0'>
+          <p className='text-sm font-medium truncate'>{userData.fullname}</p>
+          <p className='text-xs text-muted-foreground truncate'>
+            {userData.email}
+          </p>
         </div>
 
-        <SignOutButton redirectUrl='/'>
-          <div className=' cursor-pointer'>
-            <LogOut className='w-5 h-5 opacity-75 hover:opacity-100' />
-          </div>
-        </SignOutButton>
+        <div className='cursor-pointer flex-shrink-0'>
+          <SignOutButton redirectUrl='/'>
+            <div className=' cursor-pointer'>
+              <LogOut className='w-5 h-5 opacity-75 hover:opacity-100' />
+            </div>
+          </SignOutButton>
+          {/* <LogOut className='w-5 h-5 opacity-75 hover:opacity-100' /> */}
+        </div>
       </div>
     </div>
   )
@@ -422,6 +428,11 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
             </>
           )}
           {selectedMode === 'projects' && (
+                        <div className='max-h-screen '>
+
+              <h2 className='text-3xl max-w-5xl font-bold mb-6 hidden md:block '>
+                Project Recommendations
+              </h2>
             <motion.div
               key='projects'
               initial={{ opacity: 0, y: 20 }}
@@ -431,13 +442,14 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
             >
               <ProjectSection projectList={NotesData.projectList} />
             </motion.div>
+            </div>
           )}
 
           {selectedMode === 'story' && (
             <div className='max-h-screen '>
-                <h2 className='text-3xl font-bold mb-6 hidden md:block '>
-                  Story Time
-                </h2>
+              <h2 className='text-3xl font-bold mb-6 hidden md:block '>
+                Story Time
+              </h2>
               {/* <motion.div
                 key='story'
                 initial={{ opacity: 0 }}
@@ -479,7 +491,10 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
               </div> */}
               {/* <StorySection  story={NotesData.storytelling}/> */}
               {/* <StorySection  story={dummyStory}/> */}
-              <StorySection  images={dummyimages} story={NotesData.storytelling}/>
+              <StorySection
+                images={dummyimages}
+                story={NotesData.storytelling}
+              />
             </div>
           )}
         </AnimatePresence>

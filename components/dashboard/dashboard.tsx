@@ -72,6 +72,9 @@ function DashboardContent () {
 
       if (data.notesDataId) {
         // Redirect to /dashboard/[id]
+        toast('Redirecting to the Notes page...', {
+          description: 'You will be redirected to your Notes page shortly.',
+        })
         router.push(`/dashboard/${data.notesDataId}`)
         setLoading(false)
 

@@ -25,9 +25,7 @@ export default function ProjectSection({ projectList }: ProjectProps) {
 
  return (
    <div className='space-y-6'>
-     <h2 className='text-2xl md:text-3xl font-bold mb-6'>
-       Project Recommendations
-     </h2>
+    
      <Tabs defaultValue={categories[0]} className="w-full">
        <TabsList>
          {categories.map((category, index) => (

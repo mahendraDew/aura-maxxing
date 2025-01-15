@@ -32,7 +32,7 @@ const RevisionNotes = ({ content }: { content: string }) => {
   }, []);
 
   return (
-    <div className="prose mx-auto dark:prose-invert">
+    <div className="prose mx-auto w-full dark:prose-invert">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
