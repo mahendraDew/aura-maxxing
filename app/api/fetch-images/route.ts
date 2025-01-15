@@ -1,43 +1,67 @@
-import axios from "axios";
-import { NextResponse } from "next/server";
+// import { NextResponse } from 'next/server'
+// import { Innertube } from 'youtubei.js/web'
+
+// // const youtube = await Innertube.create({
+// //   lang: 'en',
+// //   location: 'US',
+// //   retrieve_player: false
+// // })
+
+// export async function POST (req: Request) {
+//   const { url }: { url: string } = await req.json()
+//   console.log('Received URL:', url)
+//   try {
+//     // Validate input
+//     const youtube = await Innertube.create({
+//       lang: 'en',
+//       location: 'US',
+//       retrieve_player: false
+//     })
+
+//     // const inf = await youtube.getBasicInfo(url)
+//     // console.log("inf:", inf);
+//     const videoIdMatch = url.match(
+//         /(?:https?:\/\/)?(?:www\.)?youtube\.com\/.*(?:\?|&)v=([^&]+)/
+//       ) || url.match(/(?:https?:\/\/)?(?:www\.)?youtu\.be\/([^?&]+)/)
+//     if (!videoIdMatch || !videoIdMatch[1]) {
+//       throw new Error('Invalid YouTube URL')
+//     }
+//     const videoId = videoIdMatch[1]
+//     console.log('Extracted videoId:', videoId)
+//     const info = await youtube.getInfo(videoId)
+//     const transcriptData = await info.getTranscript()
+//     // console.log("tarnscriptData: ", transcriptData.transcript.content.body);
+//     //@ts-ignore
+//     const tdata = transcriptData.transcript.content.body.initial_segments.map(
+//       segment => segment.snippet.text
+//     )
+
+//     console.log('tdata: ', tdata)
+//     const longParagraph = tdata.join(' ') // Join with a space between lines
+
+//     console.log('long para: ', longParagraph)
+
+//     // } catch (error) {
+//     //   console.error('Error fetching transcript:', error)
+//     //   throw error
+//     // }
+
+//     //  console.log("tasns:", trans)
+
+//     // Return the transcript
+//     return NextResponse.json({ tdata }, { status: 200 })
+//   } catch (error) {
+//     console.error('Error fetching transcript:', error)
+
+//     // Handle errors
+//     return NextResponse.json(
+//       { error: 'Failed to fetch transcript.', details: error },
+//       { status: 500 }
+//     )
+//   }
+// }
+
+
 
 export async function POST (req: Request) {
-    const { prompts }: { prompts: string[] } = await req.json();
-
-    console.log("got the prompt:", prompts)
-
-    try {
-        const images: string[] = []
-        const imagePromises = prompts.map(async paragraph => {
-          try {
-            const response = await axios.post('https://magicloops.dev/api/loop/59db37cf-e2ba-4870-9f8c-4b7bbfe4b70d/run', {
-              prompt: paragraph
-            })
-            if (response.data?.imageUrl) {
-              images.push(
-                response.data.imageUrl // Store image URL in paragraph object
-              )
-            } else {
-              console.warn(
-                `Image generation failed for prompt: ${paragraph}`
-              )
-            }
-          } catch (error) {
-            console.error(
-              `Error fetching image for prompt: ${paragraph}`,
-              error
-            )
-          }
-        })
-
-       const imgUrls =  await Promise.all(imagePromises)
-
-        return NextResponse.json({ imgUrls }, { status: 200 })
-
-    } catch (error) {
-        return NextResponse.json({ "err": "error hhhhhh"+error }, { status: 500 })
-
-    }
-
-
 }
