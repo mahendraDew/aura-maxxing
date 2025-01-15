@@ -1,5 +1,6 @@
 import connectToDatabase from '@/lib/db/mongo/db'
-import { getNebiusData } from '@/lib/nebius'
+// import { getNebiusData } from '@/lib/nebius'
+import { getNebiusDataGen } from '@/lib/nebius-data-generation'
 import { VideoModel, VideoNotesModel } from '@/modal/schema'
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
@@ -87,7 +88,8 @@ export async function POST (req: Request) {
     //#2: hit the gemini and get all the details of the cards and functions
     console.log('Generating content...')
     // const geminiData = await getGeminiData(transcriptData)
-    const nebiusData = await getNebiusData(transcriptData)
+    // const nebiusData = await getNebiusData(transcriptData)
+    const nebiusData = await getNebiusDataGen(transcriptData)
     console.log('nebiusData:', nebiusData)
     // const parsedFlashcards = JSON.parse(nebiusData?.flashCard);
     // const parsedQuizzes = JSON.parse(nebiusData?.quiz);
@@ -171,32 +173,32 @@ export async function POST (req: Request) {
       storytelling: nebiusData?.story
     })
 
-    // const storytelling = [
-    //   {
-    //     text: "Once upon a time, in the magical land of coding, lived a curious robot named Bolt. Bolt loved to explore new things, and one day he stumbled upon a mysterious box labeled 'GPT-3'.  Curious, Bolt opened it, and inside was a powerful tool that could generate text just like a human!",
-    //     prompt: "Illustration of a friendly robot named Bolt, excitedly looking at a computer screen showing the words 'GPT-3'."
-    //   },
-    //   {
-    //     text: "Bolt quickly learned that GPT-3 was a 'pre-trained generative transformer.'  This meant it had learned from a HUGE pile of data – like reading millions of books!  The more it read, the better it got at writing and understanding language. Think of it as learning to write by reading all the stories in the world!",
-    //     prompt: "Illustration of Bolt looking at a huge pile of data books, with a robot teacher explaining how the model learns from data."
-    //   }
-    // ]
+    // // const storytelling = [
+    // //   {
+    // //     text: "Once upon a time, in the magical land of coding, lived a curious robot named Bolt. Bolt loved to explore new things, and one day he stumbled upon a mysterious box labeled 'GPT-3'.  Curious, Bolt opened it, and inside was a powerful tool that could generate text just like a human!",
+    // //     prompt: "Illustration of a friendly robot named Bolt, excitedly looking at a computer screen showing the words 'GPT-3'."
+    // //   },
+    // //   {
+    // //     text: "Bolt quickly learned that GPT-3 was a 'pre-trained generative transformer.'  This meant it had learned from a HUGE pile of data – like reading millions of books!  The more it read, the better it got at writing and understanding language. Think of it as learning to write by reading all the stories in the world!",
+    // //     prompt: "Illustration of Bolt looking at a huge pile of data books, with a robot teacher explaining how the model learns from data."
+    // //   }
+    // // ]
 
-    //#2: Fetch Data from Magic Loops
-    // console.log('Image generation Magic Loops...');
-    // const magicLoopsUrl = process.env.MAGIC_LOOP_URL!;
+    // //#2: Fetch Data from Magic Loops
+    // // console.log('Image generation Magic Loops...');
+    // // const magicLoopsUrl = process.env.MAGIC_LOOP_URL!;
 
-    // const magicLoopsResponse = await axios.post(magicLoopsUrl, {
-    //   input: transcriptData,
-    // });
+    // // const magicLoopsResponse = await axios.post(magicLoopsUrl, {
+    // //   input: transcriptData,
+    // // });
 
-    // const magicLoopsResult = magicLoopsResponse.data;
-    // console.log('Magic Loops API Response:', magicLoopsResult);
+    // // const magicLoopsResult = magicLoopsResponse.data;
+    // // console.log('Magic Loops API Response:', magicLoopsResult);
 
-    // const responseJson = await magicLoopsResult.json();
-    // console.log(responseJson);
+    // // const responseJson = await magicLoopsResult.json();
+    // // console.log(responseJson);
 
-    // console.log("transcriptData:", transcriptData)
+    // // console.log("transcriptData:", transcriptData)
     return NextResponse.json({ notesDataId: NotesData._id }, { status: 200 })
     // return NextResponse.json({ "msg": "asdf" }, { status: 200 })
   } catch (e) {

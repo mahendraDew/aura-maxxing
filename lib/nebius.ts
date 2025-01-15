@@ -407,8 +407,8 @@ export async function getNebiusData (transcript: string) {
     const genText = {
       revisionNotes: revisionNotes.choices[0].message.content,
       flashCard: JSON.parse( flashcards.choices[0].message.content!),
-      quiz: JSON.parse( quizzes.choices[0].message.content!),
       projectList: JSON.parse( projectList.choices[0].message.content!),
+      quiz: JSON.parse( quizzes.choices[0].message.content!),
       story: JSON.parse( story.choices[0].message.content!)
     }
 
