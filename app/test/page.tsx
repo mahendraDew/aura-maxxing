@@ -1,92 +1,274 @@
 // 'use client'
 
-// import axios from 'axios'
-// import { useState } from 'react'
-// import { Innertube } from 'youtubei.js/web'
+// import { useState } from 'react';
 
-// export default function Home() {
-//   const [url, setUrl] = useState('')
-//   const [transcript, setTranscript] = useState<string[]>([])
-//   const [isLoading, setIsLoading] = useState(false)
-//   const [error, setError] = useState('')
+// const TextToSpeech = () => {
+//     const [text, setText] = useState('');
+//     const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
-  
+//     const handleConvert = async () => {
+//         const response = await fetch('/api/text-to-speech', {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ text }),
+//         });
 
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault()
-//     setIsLoading(true)
-//     setError('')
-//     setTranscript([])
+//         const data = await response.body;
+//         console.log("res: ", response)
 
-//     try {
-//       const result = await axios.post("/api/fetch-images", {url});
-//       const data = await result.data
-//       console.log("dataAAAAAAAAAA:", data);
-//       // setTranscript(result)
-//     } catch (err) {
-//       setError('Failed to fetch transcript. Please check the URL and try again.')
-//     } finally {
-//       setIsLoading(false)
-//     }
-//   }
+//         if (response.ok) {
+//             const blob = await response.blob();
+//             const url = URL.createObjectURL(blob);
+//             setAudioUrl(url);
+//         } else {
+//             alert('Failed to convert text to speech');
+//         }
+//     };
 
-//   return (
-//     <main className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-//       <div className="max-w-3xl mx-auto">
-//         <h1 className="text-3xl font-bold text-center mb-8">
-//           YouTube Transcript Generator
-//         </h1>
-//         <div className="bg-white shadow-md rounded-lg p-6">
-//           <form onSubmit={handleSubmit} className="mb-6">
-//             <div className="mb-4">
-//               <label htmlFor="url" className="block text-sm font-medium text-gray-700">
-//                 YouTube Video URL
-//               </label>
-//               <input
-//                 type="url"
-//                 id="url"
-//                 value={url}
-//                 onChange={(e) => setUrl(e.target.value)}
-//                 required
-//                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-//                 placeholder="https://www.youtube.com/watch?v=..."
-//               />
+//     return (
+//         <div>
+//             <textarea
+//                 value={text}
+//                 onChange={(e) => setText(e.target.value)}
+//                 placeholder="Enter text to convert"
+//                 rows={5}
+//                 cols={50}
+//             />
+//             <button onClick={handleConvert}>Convert</button>
+//             <div className='h-96 w-96 bg-gray-700'>
+
+//             {audioUrl && (
+//               <audio controls>
+//                     <source src={audioUrl} type="audio/mpeg" />
+//                     Your browser does not support the audio element.
+//                 </audio>
+//             )}
 //             </div>
-//             <button
-//               type="submit"
-//               disabled={isLoading}
-//               className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
-//             >
-//               {isLoading ? 'Generating...' : 'Generate Transcript'}
-//             </button>
-//           </form>
-
-//           {error && <p className="text-red-600 mb-4">{error}</p>}
-
-//           {transcript.length > 0 && (
-//             <div>
-//               <h2 className="text-xl font-semibold mb-2">Transcript:</h2>
-//               <div className="bg-gray-100 p-4 rounded-md max-h-96 overflow-y-auto">
-//                 {transcript.map((line, index) => (
-//                   <p key={index} className="mb-2">
-//                     {line}
-//                   </p>
-//                 ))}
-//               </div>
-//             </div>
-//           )}
 //         </div>
-//       </div>
-//     </main>
-//   )
-// }
+//     );
+// };
 
-import React from 'react'
+// export default TextToSpeech;
 
-function test() {
+// 'use client';
+
+// import { useState } from 'react';
+
+// const TextToSpeech = () => {
+//     const [text, setText] = useState('');
+//     const [audioUrl, setAudioUrl] = useState<string | null>(null);
+
+//     const handleConvert = async () => {
+//         const response = await fetch('/api/text-to-speech', {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ text }),
+//         });
+
+//         if (!response.ok) {
+//             console.error('Failed to fetch audio');
+//             return;
+//         }
+
+//         const reader = response.body?.getReader();
+//         const chunks: Uint8Array[] = [];
+
+//         if (reader) {
+//             let done = false;
+
+//             while (!done) {
+//                 const { value, done: readerDone } = await reader.read();
+//                 if (value) chunks.push(value);
+//                 done = readerDone;
+//             }
+//         }
+
+//         // Combine all chunks into a single Blob
+//         const audioBlob = new Blob(chunks, { type: 'audio/mpeg' });
+
+//         // Create a URL for the Blob
+//         const audioUrl = URL.createObjectURL(audioBlob);
+//         setAudioUrl(audioUrl);
+//     };
+
+//     return (
+//         <div>
+//             <textarea
+//                 value={text}
+//                 onChange={(e) => setText(e.target.value)}
+//                 placeholder="Enter text to convert"
+//                 rows={5}
+//                 cols={50}
+//             />
+//             <button onClick={handleConvert}>Convert</button>
+//             {audioUrl && (
+//                 <audio controls>
+//                     <source src={audioUrl} type="audio/mpeg" />
+//                     Your browser does not support the audio element.
+//                 </audio>
+//             )}
+//         </div>
+//     );
+// };
+
+// export default TextToSpeech;
+
+// 'use client';
+
+// import { useState, useRef } from 'react';
+
+// const TextToSpeech = () => {
+//     const [text, setText] = useState('');
+//     const [audioUrl, setAudioUrl] = useState<string | null>(null);
+//     const audioRef = useRef<HTMLAudioElement | null>(null);
+
+//     const handleConvert = async () => {
+//         const response = await fetch('/api/text-to-speech', {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ text }),
+//         });
+
+//         if (!response.ok) {
+//             console.error('Failed to fetch audio');
+//             return;
+//         }
+
+//         const reader = response.body?.getReader();
+//         const chunks: Uint8Array[] = [];
+
+//         if (reader) {
+//             let done = false;
+
+//             while (!done) {
+//                 const { value, done: readerDone } = await reader.read();
+//                 if (value) chunks.push(value);
+//                 done = readerDone;
+//             }
+//         }
+
+//         const audioBlob = new Blob(chunks, { type: 'audio/mpeg' });
+//         const audioUrl = URL.createObjectURL(audioBlob);
+
+//         console.log("audio url: ", audioUrl)
+
+//         setAudioUrl(audioUrl);
+
+//         // Ensure the audio plays after setting the URL
+//         if (audioRef.current) {
+//             audioRef.current.load(); // Load the new source
+//             audioRef.current.play(); // Play the audio
+//         }
+//     };
+
+//     return (
+//         <div>
+//             <textarea
+//                 value={text}
+//                 onChange={(e) => setText(e.target.value)}
+//                 placeholder="Enter text to convert"
+//                 rows={5}
+//                 cols={50}
+//             />
+//             <button onClick={handleConvert}>Convert</button>
+//             <audio ref={audioRef} controls>
+//                 {audioUrl && <source src={audioUrl} type="audio/mpeg" />}
+//                 Your browser does not support the audio element.
+//             </audio>
+//         </div>
+//     );
+// };
+
+// export default TextToSpeech;
+
+'use client'
+
+import { Button } from '@/components/ui/button'
+import { useState } from 'react'
+
+const TextToSpeech = () => {
+  const [text, setText] = useState('')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [audioEle, setAudioEle] = useState<HTMLAudioElement | null>(null)
+  const [err, setErr] = useState<string | null>(null)
+
+  const handleGenAudio = async () => {
+    if (!text.trim()) return
+
+    setIsGenerating(true)
+    setErr(null)
+
+    try {
+      const response = await fetch('api/text-to-speech', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'appication/json'
+        },
+        body: JSON.stringify({
+          text
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'falied to gen data')
+      }
+
+      const audio = new Audio(`data:audio/mpeg;base64,${data.audio}`)
+      setAudioEle(audio)
+      audio.onended = () => setIsPlaying(false)
+      audio.play()
+      setIsPlaying(true)
+    } catch (error) {
+      console.log('erro gen audio in text comp: ', error)
+      setErr('error')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
+
+  const handlePlayPause = () => {
+    if (!audioEle) return
+
+    if (isPlaying) {
+      audioEle.pause()
+    } else {
+      audioEle.play()
+    }
+    setIsPlaying(!isPlaying)
+  }
+
   return (
-    <div>test</div>
+    <div className=' p-6 rounded-lg '>
+      <div>
+        <label>Enter text</label>
+        <textarea
+          value={text}
+          onChange={e => setText(e.target.value)}
+          placeholder='Enter text here'
+        />
+
+        {err && <p className='text-red-700'>{err}</p>}
+
+        <div>
+          <Button onClick={handleGenAudio} disabled={isGenerating || !text.trim()}>
+            {isGenerating ? "generateing..." : "gen audio"}
+          </Button>
+
+          {audioEle && (
+            <Button
+            onClick={handlePlayPause}
+            >
+              {isPlaying? "pause": "play"}
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }
 
-export default test
+
+export default TextToSpeech;
