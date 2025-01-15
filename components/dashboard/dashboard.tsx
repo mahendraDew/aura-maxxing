@@ -9,8 +9,36 @@ import { toast } from 'sonner'
 import axios from 'axios'
 import { Youtube } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { MultiStepLoader as Loader } from "@/components/ui/multi-step-loader";
+
+const loadingStates = [
+  { text: "Summoning the AI gods..." },
+  { text: "Spilling the tea on your data..." },
+  { text: "Flexing those neural nets..." },
+  { text: "Cooking up flashcards—stay tuned!" },
+  { text: "Serving quizzes, hot and fresh..." },
+  { text: "Plotting projects like a mastermind..." },
+  { text: "Crafting a story to vibe with..." },
+  { text: "Lowkey turning transcripts into gold..." },
+  { text: "Adding a pinch of Gen Z magic..." },
+  { text: "Manifesting educational vibes..." },
+  { text: "Drafting some ✨ aesthetic ✨ notes..." },
+  { text: "Unleashing the AI drip..." },
+  { text: "It's giving... insightful vibes..." },
+  { text: "Brainstorming like a big-brained baddie..." },
+  { text: "Glow-up mode for your learning content..." },
+  { text: "Channeling main character energy..." },
+  { text: "No cap, making it lit..." },
+  { text: "On a learning grind..." },
+  { text: "AI flexing harder than ever..." },
+  { text: "Snatching transcripts, building insights..." },
+];
+ 
+
+
 
 function DashboardContent () {
+  
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter() // Initialize the useRouter hook
@@ -34,16 +62,25 @@ function DashboardContent () {
       //#1.1: make a db entry over this yt video and data
       //#2: hit the gemini and get all the details of  the cards and functions
       const response = await axios.post('/api/process-video', { url })
+      if(response.status === 500){
+        toast('Transcript not found !', {
+          description: 'This yt video doesnt have a transcript!'
+        })
+      }
       const data = response.data
       console.log('data-fe:', data)
 
       if (data.notesDataId) {
         // Redirect to /dashboard/[id]
         router.push(`/dashboard/${data.notesDataId}`)
+        setLoading(false)
+
       } else {
-        toast('Failed to retrieve ID!', {
+        toast('Failed to generate Text!', {
           description: 'The response did not include a notesDataId!'
         })
+        setLoading(false)
+
       }
 
       // if (!data.transcriptData) {
@@ -55,6 +92,9 @@ function DashboardContent () {
       setLoading(false)
     } catch (error) {
       console.log('Error aa gya bhai....', error)
+      toast('Transcript not found !', {
+        description: 'This yt video doesnt have a transcript!'
+      })
       setLoading(false)
     }
   }
@@ -73,6 +113,8 @@ function DashboardContent () {
         transition={{ duration: 0.6 }}
         className='max-w-6xl mx-auto mt-10'
       >
+              <Loader loadingStates={loadingStates} loading={loading} duration={2000} />
+
         <h1 className='text-4xl font-bold mb-8'>Dashboard</h1>
         {loading ? (
           <div>loading...</div>

@@ -66,13 +66,21 @@ const StorySchema = z.object({
   paragraphs: z.array(StoryParagraphSchema) // Array of paragraphs with prompts
 })
 
+declare module "openai" {
+  interface ChatCompletionCreateParams {
+    extra_body?: {
+      guided_json?: Record<string, unknown>;
+    };
+  }
+}
+
 export async function getNebiusData (transcript: string) {
   try {
-    console.log(' - Generating revision notes...')
     
-
+    
     // ############################################# Nebius #######################################################################
-
+    
+    console.log(' - Generating revision notes...')
     const revisionNotes = await client.chat.completions.create({
       temperature: 0.6,
       max_tokens: 512,
@@ -175,11 +183,12 @@ export async function getNebiusData (transcript: string) {
           ]
         }
       ],
-      //@ts-ignore
-      extra_body: {
-        guided_json: zodResponseFormat(flashcardsSchema, 'film').json_schema
-          .schema
-      }
+      // extra_body: {
+      //   guided_json: zodResponseFormat(flashcardsSchema, 'flashcard').json_schema
+      //     .schema
+      // }
+      response_format: zodResponseFormat(flashcardsSchema, 'flashcard')
+
     })
     console.log(' - Generating projectlist...')
     const projectList = await client.chat.completions.create({
@@ -243,11 +252,13 @@ export async function getNebiusData (transcript: string) {
           ]
         }
       ],
-      //@ts-ignore
-      extra_body: {
-        guided_json: zodResponseFormat(ProjectListSchema, 'film').json_schema
-          .schema
-      }
+      // extra_body: {
+      //   guided_json: zodResponseFormat(ProjectListSchema, 'film').json_schema
+      //     .schema
+      // }
+      
+      response_format: zodResponseFormat(ProjectListSchema, 'projectList')
+
     })
 
     console.log(' - Generating quizzes...')
@@ -286,11 +297,12 @@ export async function getNebiusData (transcript: string) {
                             "correctOption": 0
                         }
                     ]
+                    For response format, refer to this schema: ${QuizzesSchema}
             
                     Ensure that:
                     - All options are meaningful and relevant.
                     - The correct answer matches the transcript content.
-            
+
                     Transcript:
                     ${transcript}
                   `
@@ -305,11 +317,11 @@ export async function getNebiusData (transcript: string) {
           ]
         }
       ],
-      //@ts-ignore
-      extra_body: {
-        guided_json: zodResponseFormat(QuizzesSchema, 'film').json_schema
-          .schema
-      }
+      // extra_body: {
+      //   guided_json: zodResponseFormat(QuizzesSchema, 'film').json_schema
+      //     .schema
+      // }
+      response_format: zodResponseFormat(QuizzesSchema, 'quizzes')
     })
     console.log(' - Generating story...')
     const story = await client.chat.completions.create({
@@ -381,16 +393,16 @@ export async function getNebiusData (transcript: string) {
           ]
         }
       ],
-      //@ts-ignore
-      extra_body: {
-        guided_json: zodResponseFormat(StorySchema, 'film').json_schema
-          .schema
-      }
+      // extra_body: {
+      //   guided_json: zodResponseFormat(StorySchema, 'film').json_schema
+      //     .schema
+      // }
+      response_format: zodResponseFormat(StorySchema, 'story')
+
     })
 
     console.log('Content is generated! ', )
-    console.log("Types:::::")
-    console.log("Types: flashcard: ", typeof flashcards)
+    console.log("quiz: ", quizzes.choices[0].message.content)
 
     const genText = {
       revisionNotes: revisionNotes.choices[0].message.content,
