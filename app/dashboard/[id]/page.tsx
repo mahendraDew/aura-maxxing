@@ -11,11 +11,33 @@ export default async function DashboardDetail ({params}: {params: Promise<{ id: 
   const { userId } = await auth()
 
   //make a db req to seee if this notesDataId is present and with the 'userId' as userId
+  // await connectToDatabase()
 
 
   if (!userId) {
     redirect('/dashboard') 
   }
+  
+  await connectToDatabase()
+
+  const isValidObjectId = /^[a-fA-F0-9]{24}$/.test(notesDataId);
+  if (!isValidObjectId) {
+    redirect("/dashboard");
+  }
+
+
+  const notesEntry: VideoNotes | null = await VideoNotesModel.findOne({
+    _id: notesDataId,
+    userId: userId,
+  })
+
+  // console.log("notesEntry: ", notesEntry)
+
+  if (!notesEntry) {
+    console.log("no name with this param id")
+    redirect('/dashboard') 
+  }
+  
   const client = await clerkClient()
   const user = await client.users.getUser(userId)
 
@@ -23,17 +45,6 @@ export default async function DashboardDetail ({params}: {params: Promise<{ id: 
     imageUrl: user.imageUrl,
     fullname: user.fullName,
     email: user.emailAddresses[0].emailAddress
-  }
-
-
-  await connectToDatabase()
-  const notesEntry: VideoNotes | null = await VideoNotesModel.findOne({
-    _id: notesDataId,
-    userId: userId,
-  })
-
-  if (!notesEntry) {
-    redirect('/dashboard') 
   }
 
   const notecontent = {
@@ -115,7 +126,9 @@ export default async function DashboardDetail ({params}: {params: Promise<{ id: 
     <div>
       {/* <TestComponent  serializedData={JSON.stringify(notecontent)}   userData={userData}/> */}
       {/* <DashboardDetailContent userData={userData} notesEntry={notecontent} /> */}
-      <DashboardDetailContent userData={userData} serializedData={JSON.stringify(notecontent)}  />
+
+      <DashboardDetailContent userData={userData} serializedData={JSON.stringify(notecontent)} videoId={notesDataId} userId={userId}/>
+      
       {/* <DashboardComponent userData={userData} notesEntry={notecontent} /> */}
       {/* <DashboardDetailContent userData={userData} /> */}
       {/* <DashboardDetailContent userData={userData} notesDataId={notesDataId}/> */}

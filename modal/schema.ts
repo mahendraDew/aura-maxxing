@@ -27,7 +27,6 @@ type flashcard={
 }
 
 
-
 // // AI Output Schema
 // interface VideoNotes extends Document {
 //   userId: String,
@@ -153,6 +152,27 @@ const VideoNotesSchema = new Schema<VideoNotes>(
 
 const VideoNotesModel = mongoose.models.VideoNotesContent || mongoose.model<VideoNotes>("VideoNotesContent", VideoNotesSchema);
 
+
+interface ImageURLs {
+  userId: String;
+  videoId: mongoose.Types.ObjectId;
+  imageURLs: String[]
+}
+
+
+const ImageSchema = new Schema<ImageURLs>(
+  {
+    userId: {type: String},
+    videoId: { type: mongoose.Schema.Types.ObjectId, ref: "Video", required: true },
+    imageURLs: [{type:String}]
+  },
+  { timestamps: true }
+);
+
+const ImageUrlsModel = mongoose.models.ImageURLs || mongoose.model<ImageURLs>("ImageURLs", ImageSchema);
+
+
+
 // Export Models
-export { VideoModel, VideoNotesModel };
+export { VideoModel, VideoNotesModel, ImageUrlsModel };
 export type { VideoNotes };

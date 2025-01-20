@@ -25,7 +25,7 @@ export function Card({ front, back, index, onSwipe }: CardProps) {
   return (
     <div className="w-64 sm:w-72 md:w-96 lg:w-[43rem] h-96 [perspective:1000px]  border rounded-lg">
       <motion.div
-        className="w-full h-full relative [transform-style:preserve-3d] cursor-grab active:cursor-grabbing"
+        className="w-full h-full relative [transform-style:preserve-3d] cursor-grab border rounded-lg active:cursor-grabbing"
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         onDragEnd={handleDragEnd}
@@ -36,14 +36,14 @@ export function Card({ front, back, index, onSwipe }: CardProps) {
       >
         <div>
         </div>
-        <div className="w-full h-full absolute backface-hidden bg-white dark:bg-zinc-900 rounded-lg shadow-md dark:shadow-gray-900/10 flex items-center justify-center p-4">
+        <div className="w-full h-full absolute backface-hidden bg-gray-100 dark:bg-zinc-900 rounded-lg  flex items-center justify-center p-4">
           <p className='absolute top-1 left-1 font-semibold text-gray-500'>
             #{index}
           </p>
           <p className="text-xl font-semibold text-center">{front}</p>
         </div>
           
-        <div className="w-full h-full absolute backface-hidden bg-white dark:bg-zinc-900 rounded-lg shadow-md dark:shadow-gray-900/10 flex items-center justify-center p-4 [transform:rotateY(180deg)]">
+        <div className="w-full h-full absolute backface-hidden bg-gray-200 dark:bg-zinc-900 rounded-lg flex items-center justify-center p-4 [transform:rotateY(180deg)]">
           <p className='absolute top-1 left-1 font-semibold text-gray-500'>
             #{index}
           </p>

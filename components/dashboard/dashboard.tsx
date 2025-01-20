@@ -49,7 +49,7 @@ function DashboardContent ({ notesEntry }: Props) {
 
   const notesEntryData: NoteType[] = JSON.parse(notesEntry)
 
-  console.log('mill gya yrr notesEntryVala Data: ', notesEntryData)
+  // console.log('mill gya yrr notesEntryVala Data: ', notesEntryData)
 
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)

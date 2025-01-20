@@ -360,17 +360,17 @@ export async function getNebiusData (transcript: string) {
                     - Be structured into paragraphs that explain key concepts in a fun, relatable way.
                     - Include a prompt for an illustration that matches each paragraph.
             
-                    Example Format (these are just for examples its not strict to use name 'bolt'):
+                    Example Format (these are just for examples its not strict to use name 'bolt' or have to have a robot named Bolt):
                     {
                         "title": "The Case of the Missing Email: A Node.js Adventure!",
                         "paragraphs": [
                             {
                                 "text": "Once upon a time, in the land of coding, lived a super-smart robot named Bolt...",
-                                "prompt": "A Cartoon/anime style illustration of Bolt, a friendly robot with glowing eyes, looking excitedly at a computer screen displaying the words 'Node Mailer'."
+                                "prompt": "A Cartoon/anime style illustration for kid storybook, a friendly robot with glowing eyes, looking excitedly at a computer screen displaying the words 'Node Mailer'."
                             },
                             {
                                 "text": "Bolt wanted to send a simple 'Hello, World!' email...",
-                                "prompt": "A Cartoon/anime style illustration of Bolt writing a 'Hello, World!' email with colorful HTML code, using backticks as special magic markers."
+                                "prompt": "A Cartoon/anime style illustration for kid storybook writing a 'Hello, World!' email with colorful HTML code, using backticks as special magic markers."
                             }
                         ]
                     }

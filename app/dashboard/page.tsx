@@ -25,15 +25,15 @@ export default async function Dashboard() {
     userId: userId,
   }).select('_id videoId');
 
-  console.log("noteentry: ", notesEntry)
+  // console.log("noteentry: ", notesEntry)
 
   const videoIds = notesEntry.map((note) => note.videoId);
 
-  console.log("videoIds:", videoIds)
+  // console.log("videoIds:", videoIds)
 
   const videos = await VideoModel.find({ _id: { $in: videoIds } }).select('url');
 
-  console.log("videos:", videos)
+  // console.log("videos:", videos)
 
 
   const notesWithVideoURL = notesEntry.map((note) => {
@@ -41,7 +41,7 @@ export default async function Dashboard() {
     return { ...note.toObject(), videoURL: video?.url || null }; // Add videoURL or null if not found
   });
 
-  console.log("notesWithVideoURL:", notesWithVideoURL);
+  // console.log("notesWithVideoURL:", notesWithVideoURL);
   
   
   return (

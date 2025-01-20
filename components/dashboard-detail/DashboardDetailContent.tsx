@@ -90,7 +90,9 @@ interface Props {
   //     paragraphs: { text: string; prompt: string }[];
   //   };
   // }
-  serializedData: string
+  serializedData: string,
+  videoId: string,
+  userId: string
 }
 
 type NotesDataType = {
@@ -152,29 +154,29 @@ export const dummyStory = {
   ]
 }
 
-const dummyimages = [
-  {
-    prompt: '/img/1.jpeg'
-  },
-  {
-    prompt: '/img/placeholder.webp'
-  },
-  {
-    prompt: '/img/placeholder-2.webp'
-  },
-  {
-    prompt: '/img/placeholder-3.webp'
-  },
-  {
-    prompt: '/img/placeholder-4.webp'
-  },
-  {
-    prompt: '/img/placeholder-5.webp'
-  }
-]
+// const dummyimages = [
+//   {
+//     prompt: '/img/1.jpeg'
+//   },
+//   {
+//     prompt: '/img/placeholder.webp'
+//   },
+//   {
+//     prompt: '/img/placeholder-2.webp'
+//   },
+//   {
+//     prompt: '/img/placeholder-3.webp'
+//   },
+//   {
+//     prompt: '/img/placeholder-4.webp'
+//   },
+//   {
+//     prompt: '/img/placeholder-5.webp'
+//   }
+// ]
 
 // export const DashboardDetailContent = ({ userData, notesEntry }: Props) => {
-export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
+export const DashboardDetailContent = ({ userData, serializedData, videoId, userId }: Props) => {
   // console.log("serialized data: ", serializedData)
   const NotesData: NotesDataType = JSON.parse(serializedData)
 
@@ -492,8 +494,9 @@ export const DashboardDetailContent = ({ userData, serializedData }: Props) => {
               {/* <StorySection  story={NotesData.storytelling}/> */}
               {/* <StorySection  story={dummyStory}/> */}
               <StorySection
-                images={dummyimages}
                 story={NotesData.storytelling}
+                videoId={videoId}
+                userId={userId}
               />
             </div>
           )}
