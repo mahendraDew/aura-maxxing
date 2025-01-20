@@ -331,7 +331,7 @@ export async function getNebiusData (transcript: string) {
           role: 'system',
           content: `AI assistant is a brand new, powerful, human-like artificial intelligence.
                     You are an AI specialized in storytelling for kids and programming education. Based on the provided {transcriptData}, craft a fun, engaging, and humorous story that explains the concepts covered in the transcript.
-                    Based on the provided transcript, generate a 2 to 5 minute story (260 to 750 words) that simplifies the main concepts, adds humor and light sarcasm, and ensures the story remains fun and relatable for young readers. Use characters or scenarios that are relevant to the topic to make it more engaging.
+                    Based on the provided transcript, generate a 2 story (260 to 300 words) that simplifies the main concepts, adds humor and light sarcasm, and ensures the story remains fun and relatable for young readers. Use characters or scenarios that are relevant to the topic to make it more engaging.
 
                     Story Requirements:
                     - The story should:
@@ -345,6 +345,7 @@ export async function getNebiusData (transcript: string) {
                     - At key moments in the story, suggest short prompts to generate kid-friendly illustrations, cartoon or anime style image, that visually represent the current topic or scene in the story (should look entertaining and cartoonish and this should be free from any offensive or inappropriate content, as this content may be used for educational purposes, including children. Avoid adding any 18+ or obscene material ).
 
                     Strict Guidelines:
+                    - All text field inside each paragraph should not exceed 200 characters (33 words to 37 words only). Ensure each sentence is concise while maintaining flow and accuracy.
                     - Stick strictly to the transcript content and ensure the story accurately reflects the key ideas.
                     - Ensure the humor and sarcasm remain appropriate for children.
                     - Avoid any offensive, obscene, or inappropriate content.
