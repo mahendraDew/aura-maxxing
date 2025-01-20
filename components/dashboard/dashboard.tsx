@@ -80,7 +80,7 @@ function DashboardContent ({ notesEntry }: Props) {
         })
       }
       const data = response.data
-      console.log('data-fe:', data)
+      // console.log('data-fe:', data)
 
       if (data.notesDataId) {
         // Redirect to /dashboard/[id]

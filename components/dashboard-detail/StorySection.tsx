@@ -418,7 +418,7 @@ interface StoryProps {
   videoId: string
 }
 
-export default function StorySection ({ story, videoId, userId }: StoryProps) {
+export default function StorySection ({ story, videoId }: StoryProps) {
   const [currentPage, setCurrentPage] = useState(0)
   const [direction, setDirection] = useState(1)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -437,16 +437,16 @@ export default function StorySection ({ story, videoId, userId }: StoryProps) {
     '/img/placeholder-4.webp',
     '/img/placeholder-5.webp'
   ]
-  const randomImage = dummyimages[Math.floor(Math.random() * dummyimages.length)];
-
+  const randomImage =
+    dummyimages[Math.floor(Math.random() * dummyimages.length)]
 
   const speakText = (text: string) => {
     // Cancel any ongoing narration
     // window.speechSynthesis.cancel()
-    console.log("yes we are in speakText fn....................")
+    // console.log("yes we are in speakText fn....................")
     if (!text || !('speechSynthesis' in window)) {
       // console.error('Speech synthesis is not supported or text is empty.')
-      toast("Narration stopped!")
+      toast('Narration stopped!')
       return
     }
 
@@ -454,19 +454,19 @@ export default function StorySection ({ story, videoId, userId }: StoryProps) {
 
     utterance.onstart = () => {
       setIsPlaying(true)
-      console.log('Narration started:', text)
+      // console.log('Narration started:', text)
     }
 
     utterance.onend = () => {
       // setIsPlaying(false)
-      console.log('Narration ended.')
+      // console.log('Narration ended.')
     }
 
-    utterance.onerror = error => {
-      console.log('during narration:', error)
-      toast("Narration stopped!")
-      setIsPlaying(false)
-    }
+    // utterance.onerror = error => {
+    //   // console.log('during narration:', error)
+    //   toast("Narration stopped!")
+    //   setIsPlaying(false)
+    // }
 
     // Set voice options
     const voices = window.speechSynthesis.getVoices()
@@ -491,52 +491,50 @@ export default function StorySection ({ story, videoId, userId }: StoryProps) {
   // }, [currentPage, isPlaying, story.paragraphs])
 
   useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
-  
+    let timer: NodeJS.Timeout | null = null
+
     if (isPlaying) {
-      console.log("its still playing")
+      // console.log("its still playing")
       // Start page animations and narration
-      speakText(story.paragraphs[currentPage]?.text || '');
-      
+      speakText(story.paragraphs[currentPage]?.text || '')
+
       timer = setInterval(() => {
-        setCurrentPage((prev) => {
+        setCurrentPage(prev => {
           if (prev + 1 >= story.paragraphs.length) {
-            handleStopNarration(); // Stop when the story ends
-            return prev;
+            handleStopNarration() // Stop when the story ends
+            return prev
           }
-          return prev + 1;
-        });
-        setDirection((prev) => prev * -1);
-      }, 20000); // Change page every 20 seconds
+          return prev + 1
+        })
+        setDirection(prev => prev * -1)
+      }, 20000) // Change page every 20 seconds
     } else {
-      console.log("its stopped")
+      // console.log("its stopped")
       // Clear interval if stopped
-      if (timer) clearInterval(timer);
+      if (timer) clearInterval(timer)
     }
-  
+
     return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [isPlaying, currentPage, story.paragraphs]);
-  
+      if (timer) clearInterval(timer)
+    }
+  }, [isPlaying, currentPage, story.paragraphs])
 
   useEffect(() => {
-    console.log("yhaa bhi....")
-    if(isPlaying){
-
+    // console.log("yhaa bhi....")
+    if (isPlaying) {
       const timer = setInterval(() => {
         setCurrentPage(prev => {
           if (prev + 1 >= story.paragraphs.length) {
-          window.speechSynthesis.cancel() // Stop narration when story ends
-          return prev
-        }
-        return prev + 1
-      })
-      setDirection(prev => prev * -1)
-    }, 20000) // Change page every 20 seconds
-    
-    return () => clearInterval(timer)
-  }
+            window.speechSynthesis.cancel() // Stop narration when story ends
+            return prev
+          }
+          return prev + 1
+        })
+        setDirection(prev => prev * -1)
+      }, 20000) // Change page every 20 seconds
+
+      return () => clearInterval(timer)
+    }
   }, [story.paragraphs.length])
 
   // const handlePlayNarration = () => {
@@ -544,43 +542,61 @@ export default function StorySection ({ story, videoId, userId }: StoryProps) {
   //   speakText(story.paragraphs[currentPage]?.text || '')
   // }
   const handlePlayNarration = () => {
-    setIsPlaying(true);
-  };
-  
+    setIsPlaying(true)
+  }
 
   // const handleStopNarration = () => {
   //   setIsPlaying(false)
   //   window.speechSynthesis.cancel()
   // }
   const handleStopNarration = () => {
-    toast("Narration stopped!")
-    setIsPlaying(false);
-    window.speechSynthesis.cancel(); // Stop narration
-    setCurrentPage(0); // Reset to the first page if needed
-  };
-  
+    toast('Narration stopped!')
+    setIsPlaying(false)
+    window.speechSynthesis.cancel() // Stop narration
+    setCurrentPage(0) // Reset to the first page if needed
+  }
 
   async function GenerateStoryFn () {
-    console.log('Generating story....')
+    // console.log('Generating story....')
     setIsLoading(true)
     //we'll check in db if images is present in db or not
-    console.log('userId:', userId)
-    console.log('videoId:', videoId)
+    // console.log('userId:', userId)
+    // console.log('videoId:', videoId)
     // await connectToDatabase();
+    try {
+      // const imageDataFind = await ImageUrlsModel.find({
+      //   userId: userId,
+      //   videoId: videoId
+      // }).select('_id imageURLs')
 
-    //getting the images
-    const innerPrompts = story.paragraphs.map(para => para.prompt)
-    const story_title = story.title
-    console.log('innerPromps: ', innerPrompts)
-    const response = await axios.post('/api/image-generation', {
-      story_title,
-      innerPrompts,
-      videoId
-    })
-    const data = await response.data
-    setNewStoryLoading(false)
-    setImageURLs(data.imageURLs)
-    console.log('response data: ', data)
+      // console.log('imageDatafing:', imageDataFind)
+
+      // if yes get the urls if not then we'll make req to db
+      // if (imageDataFind) {
+      //   console.log('imageDataFound: ', imageDataFind)
+      //   setNewStoryLoading(false)
+      // } else {
+        //   // we'll make api req to generat
+        //getting the images
+        const innerPrompts = story.paragraphs.map(para => para.prompt)
+        const story_title = story.title
+        // console.log('innerPromps: ', innerPrompts)
+        const response = await axios.post('/api/image-generation', {
+          story_title,
+          innerPrompts,
+          videoId
+        })
+        const data = await response.data
+        setNewStoryLoading(false)
+        setImageURLs(data.imageURLs)
+      // }
+      // console.log('response data: ', data)
+    } catch (error) {
+      toast("Error getting the Imgages.")
+      console.log('error:', error)
+    }
+
+    setIsLoading(false)
   }
 
   return (
@@ -601,36 +617,35 @@ export default function StorySection ({ story, videoId, userId }: StoryProps) {
         <>
           <CardContent className='space-y-4'>
             <div className='relative w-full h-[32rem] max-h-[32rem] overflow-hidden rounded-lg'>
-            <AnimatePresence initial={false}>
-              <motion.div
-                key={currentPage}
-                initial={isPlaying ? { opacity: 0 } : {}}
-                animate={isPlaying ? { opacity: 1 } : {}}
-                exit={isPlaying ? { opacity: 0 } : {}}
-                transition={isPlaying ? { duration: 1 } : {}}
-              >
+              <AnimatePresence initial={false}>
                 <motion.div
-                  animate={
-                    isPlaying
-                      ? {
-                          x: direction > 0 ? ['0%', '5%'] : ['0%', '-5%'],
-                          scale: [1, 1.1, 1],
-                          transition: { duration: 20, repeat: Infinity },
-                        }
-                      : {}
-                  }
-                  className="absolute inset-0"
+                  key={currentPage}
+                  initial={isPlaying ? { opacity: 0 } : {}}
+                  animate={isPlaying ? { opacity: 1 } : {}}
+                  exit={isPlaying ? { opacity: 0 } : {}}
+                  transition={isPlaying ? { duration: 1 } : {}}
                 >
-                  <Image
-                    src={imageURLs[currentPage] || randomImage}
-                    alt={`Story illustration ${currentPage + 1}`}
-                    layout="fill"
-                    objectFit="cover"
-                  />
+                  <motion.div
+                    animate={
+                      isPlaying
+                        ? {
+                            x: direction > 0 ? ['0%', '5%'] : ['0%', '-5%'],
+                            scale: [1, 1.1, 1],
+                            transition: { duration: 20, repeat: Infinity }
+                          }
+                        : {}
+                    }
+                    className='absolute inset-0'
+                  >
+                    <Image
+                      src={imageURLs[currentPage] || randomImage}
+                      alt={`Story illustration ${currentPage + 1}`}
+                      layout='fill'
+                      objectFit='cover'
+                    />
+                  </motion.div>
                 </motion.div>
-              </motion.div>
-            </AnimatePresence>
-
+              </AnimatePresence>
             </div>
             <div
               ref={textRef}
