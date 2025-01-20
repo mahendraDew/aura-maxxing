@@ -8,10 +8,10 @@ import {
   Brain,
   FlaskConical,
   Target,
-  Rocket
+  Rocket,
+  Loader2
 } from 'lucide-react'
 import Link from 'next/link'
-import { Spotlight } from '@/components/ui/Spotlight'
 import { ModernCard } from '@/components/moderncard'
 import {
   Accordion,
@@ -20,6 +20,8 @@ import {
   AccordionTrigger
 } from '@/components/ui/accordion'
 import ModeToggle from '@/components/mode-toggle'
+import { AuroraBackground } from '@/components/ui/aura-bg'
+import { useState } from 'react'
 
 const faqs = [
   {
@@ -45,48 +47,76 @@ export default function Home () {
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.6 }
   }
+  const [loading, setLoading] = useState(false)
+  const [sloading, setSLoading] = useState(false)
 
   return (
     <main className='min-h-screen'>
       {/* Hero Section */}
-<div className='fixed right-5 top-5 z-40'>
-  <ModeToggle />
-</div>
-      <section className='relative h-screen flex items-center justify-center overflow-hidden'>
-        <Spotlight
+      <AuroraBackground>
+        <div className='fixed right-5 top-5 z-40 text-gray-800 dark:text-white'>
+          <ModeToggle />
+        </div>
+        <section className='relative h-screen flex items-center justify-center overflow-hidden'>
+          {/* <Spotlight
           className='-top-40 left-0 md:left-60 md:-top-20'
           fill='#696969'
-        />
-        {/* <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/10 to-background z-0" /> */}
-        <div className='container mx-auto px-4 z-10'>
-          <motion.div
-            initial='initial'
-            animate='animate'
-            variants={fadeIn}
-            className='text-center'
-          >
-            <h1 className='text-6xl md:text-8xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50'>
-              AURA Maxxing
-            </h1>
-            <p className='text-xl md:text-2xl mb-8 text-muted-foreground'>
-              Level up your knowledge game with AI-powered learning
-            </p>
-            <div className='flex gap-4 justify-center'>
-              <Link href='/dashboard'>
-                <Button size='lg' className='group'>
-                  Get Started
-                  <ArrowRight className='ml-2 group-hover:translate-x-1 transition-transform' />
-                </Button>
-              </Link>
-              <Link href='/signin'>
-                <Button size='lg' variant='outline'>
-                  Signin
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+        /> */}
+          {/* <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/10 to-background z-0" /> */}
+          <div className='container mx-auto px-4 z-10'>
+            <motion.div
+              initial='initial'
+              animate='animate'
+              variants={fadeIn}
+              className='text-center'
+            >
+              <h1 className='h-28 text-6xl md:text-8xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50'>
+                AURA Maxxing
+              </h1>
+              <p className='text-xl md:text-2xl mb-8 text-muted-foreground'>
+                Level up your knowledge game with AI-powered learning
+              </p>
+              <div className='flex gap-4 justify-center'>
+                <Link href='/dashboard'>
+                  <Button
+                    size='lg'
+                    className='group'
+                    onClick={() => setLoading(true)}
+                  >
+                    {loading ? (
+                      <div className='w-24 flex justify-center items-center'>
+                        <Loader2 className='w-4 h-4 animate-spin' />
+                      </div>
+                    ) : (
+                      <>
+                        Get Started
+                        <ArrowRight className='ml-2 group-hover:translate-x-1 transition-transform' />
+                      </>
+                    )}
+                  </Button>
+                </Link>
+                <Link href='/signin'>
+                  <Button
+                    size='lg'
+                    variant='outline'
+                    className='text-gray-800 dark:text-gray-300'
+                    onClick={() => setSLoading(true)}
+                  >
+                    {sloading ? (
+                      <div className='w-10 flex justify-center items-center'>
+                        <Loader2 className='w-4 h-4 animate-spin' />
+                      </div>
+                    ) : (
+                      <>Signin</>
+                    )}
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+        <div className='h-44 w-full  bg-gradient-to-t from-white dark:from-zinc-950 to-transparent' />
+      </AuroraBackground>
 
       {/* Features Section */}
       <section id='features' className='py-20 flex justify-center items-center'>
@@ -99,7 +129,9 @@ export default function Home () {
               transition={{ duration: 0.6 }}
               className='text-center mb-16'
             >
-              <h2 className='text-4xl font-bold mb-4 text-gray-100'>How It Works</h2>
+              <h2 className='text-4xl font-bold mb-4 text-gray-100'>
+                How It Works
+              </h2>
               <p className='text-muted-foreground text-lg'>
                 Transform any YouTube video into a personalized learning
                 experience
@@ -135,6 +167,7 @@ export default function Home () {
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.1 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.2 }}
                   className='p-6 rounded-lg backdrop-blur-sm bg-card/50 hover:bg-card/80 transition-colors'
@@ -187,8 +220,16 @@ export default function Home () {
             </p>
             <Link href='/dashboard'>
               <Button size='lg' className='group'>
-                Start Learning Now
-                <ArrowRight className='ml-2 group-hover:translate-x-1 transition-transform' />
+                {loading ? (
+                  <div className='w-40 flex justify-center items-center'>
+                    <Loader2 className='w-4 h-4 animate-spin' />
+                  </div>
+                ) : (
+                  <>
+                    Start Learning Now
+                    <ArrowRight className='ml-2 group-hover:translate-x-1 transition-transform' />
+                  </>
+                )}
               </Button>
             </Link>
           </motion.div>
@@ -196,7 +237,7 @@ export default function Home () {
       </section>
 
       {/* footer */}
-      <footer className='bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300 py-4'>
+      <footer className='bg-zinc-100 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-300 py-4'>
         <div className='container mx-auto text-center'>
           <p className='text-sm'>
             &copy; {new Date().getFullYear()} AURA Maxxing. All rights reserved.
