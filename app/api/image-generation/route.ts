@@ -124,21 +124,19 @@
 // const GEMINI_IMG_APIKEY = process.env.GEMINI_IMG_APIKEY!
 // const POLLINATIONSAI_API_KEY = process.env.POLLINATIONSAI_API_KEY!
 
-//@ts-ignore
 import { InferenceClient } from '@huggingface/inference'
 
 const client = new InferenceClient(process.env.HF_API_KEY)
 
 /// Use the generated image (it's a Blob)
 
-import axios from 'axios'
 import { NextResponse } from 'next/server'
 import path from 'path'
 import fs from 'fs'
 import connectToDatabase from '@/lib/db/mongo/db'
 import { auth } from '@clerk/nextjs/server'
 
-import cloudinary from 'cloudinary'
+import cloudinary, { UploadApiResponse } from 'cloudinary'
 import { ImageUrlsModel } from '@/modal/schema'
 
 cloudinary.v2.config({
@@ -146,8 +144,8 @@ cloudinary.v2.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
-const HF_API_KEY = process.env.HF_API_KEY!
-const NebiusAPIKEY = process.env.NebiusAPIKEY!
+// const HF_API_KEY = process.env.HF_API_KEY!
+// const NebiusAPIKEY = process.env.NebiusAPIKEY!
 
 export async function POST (req: Request) {
   const { userId } = await auth()
@@ -187,7 +185,6 @@ export async function POST (req: Request) {
 
     // console.log(' generated imageURLs:', results)
 
-    //@ts-ignore
     const imageURLs = results.filter((url): url is string => url !== null)
 
     console.log(' imageURLs:', imageURLs)
@@ -220,7 +217,7 @@ export async function POST (req: Request) {
   }
 }
 
-export async function generateImages (
+async function generateImages (
   innerPrompts: string[],
   story_title: string
 ) {
@@ -294,28 +291,27 @@ export async function generateImages (
         model: 'stabilityai/stable-diffusion-xl-base-1.0',
         inputs: generatePrompt2(innerPrompt),
         parameters: { num_inference_steps: 5 }
-      })
+      }) as unknown as Blob
 
       // convert blob → buffer
-      //@ts-ignore
       const arrayBuffer = await image.arrayBuffer()
       const buffer = Buffer.from(arrayBuffer)
 
       // unique filename
-      const fileName = `image-${Date.now()}-${Math.random()
-        .toString(36)
-        .slice(2)}.png`
+      // const fileName = `image-${Date.now()}-${Math.random()
+      //   .toString(36)
+      //   .slice(2)}.png`
 
-      const filePath = path.join(imagesDir, fileName)
+      // const filePath = path.join(imagesDir, fileName)
 
       // save
       // fs.writeFileSync(filePath, buffer)
 
-      const result: any = await uploadToCloudinary(buffer)
+      const result = await uploadToCloudinary(buffer)
       return result.secure_url
 
       // return public URL
-      return `/images/${fileName}`
+      // return `/images/${fileName}`
     } catch (error) {
       console.error('Error for prompt:', innerPrompt, error)
       return null
@@ -332,7 +328,6 @@ export async function generateImages (
   //     });
 
   //     // convert blob → buffer
-  //     //@ts-ignore
   //     const arrayBuffer = await image.arrayBuffer()
   //     const buffer = Buffer.from(arrayBuffer)
 
@@ -346,7 +341,7 @@ export async function generateImages (
   //     // save
   //     // fs.writeFileSync(filePath, buffer)
 
-  //     const result: any = await uploadToCloudinary(buffer)
+  //     const result = await uploadToCloudinary(buffer)
   //     return result.secure_url
 
   //     // return public URL
@@ -362,14 +357,13 @@ export async function generateImages (
   const results = await Promise.all(requests)
   console.log('results at 333: ', results)
   // remove failed ones
-  //@ts-ignore
   const imageURLs = results.filter((url): url is string => url !== null)
 
   return imageURLs
 }
 
 const uploadToCloudinary = async (buffer: Buffer) => {
-  return new Promise<any>((resolve, reject) => {
+  return new Promise<UploadApiResponse>((resolve, reject) => {
     const stream = cloudinary.v2.uploader.upload_stream(
       { folder: 'auramaxxing' },
       (error, result) => {
@@ -382,3 +376,14 @@ const uploadToCloudinary = async (buffer: Buffer) => {
     stream.end(buffer)
   })
 }
+
+
+// const uploadPromise: Promise<UploadApiResponse> = new Promise((resolve, reject) => {
+//   cloudinary.v2.uploader.upload_stream((error, uploadResult) => {
+//     if (error) return reject(error);
+//     resolve(uploadResult);
+//   }).end(byteArrayBuffer);
+// });
+
+// const uploadResult = await uploadPromise;
+

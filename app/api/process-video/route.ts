@@ -1,19 +1,19 @@
 import connectToDatabase from '@/lib/db/mongo/db'
 // import { getNebiusData } from '@/lib/nebius'
-import { getNebiusDataGen } from '@/lib/nebius-data-generation'
+// import { getNebiusDataGen } from '@/lib/nebius-data-generation'
 import { VideoModel, VideoNotesModel } from '@/modal/schema'
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import { Innertube } from 'youtubei.js/web'
+// import { Innertube } from 'youtubei.js/web'
 import { fetchTranscript } from 'youtube-transcript';
 import { getGeminiData } from '@/lib/gemini'
 
 
-const youtube = await Innertube.create({
-  lang: 'en',
-  location: 'US',
-  retrieve_player: false
-})
+// const youtube = await Innertube.create({
+//   lang: 'en',
+//   location: 'US',
+//   retrieve_player: false
+// })
 
 // interface GeminiDataTypes {
 //   revisionNotes: string;

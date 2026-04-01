@@ -3,7 +3,6 @@ import { generateObject, generateText } from 'ai'
 import { z } from 'zod'
 
 import dotenv from 'dotenv'
-import { flashcardsType } from '@/types/videoNotesType'
 dotenv.config()
 
 const google = createGoogleGenerativeAI({
