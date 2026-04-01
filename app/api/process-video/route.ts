@@ -5,6 +5,9 @@ import { VideoModel, VideoNotesModel } from '@/modal/schema'
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { Innertube } from 'youtubei.js/web'
+import { fetchTranscript } from 'youtube-transcript';
+import { getGeminiData } from '@/lib/gemini'
+
 
 const youtube = await Innertube.create({
   lang: 'en',
@@ -57,19 +60,26 @@ export async function POST (req: Request) {
     }
     const videoId = videoIdMatch[1]
     console.log('Extracted videoId:', videoId)
-    const info = await youtube.getInfo(videoId)
-    const tData = await info.getTranscript()
-    // console.log("tarnscriptData: ", transcriptData.transcript.content.body);
-    const tdataArr = tData.transcript.content?.body?.initial_segments?.map(
-      segment => segment.snippet.text
-    ) || []
-
-    // console.log('tdata: ', tdataArr)
-    const transcriptData = tdataArr.join(' ')
+    // const info= await youtube.getInfo(videoId)
+    // const tData = await info.getTranscript()
+    // const tdataArr = tData.transcript.content?.body?.initial_segments?.map(
+      //   segment => segment.snippet.text
+      // ) || []
+      
+      // // console.log('tdata: ', tdataArr)
+      // const transcriptData = tdataArr.join(' ')
+      // console.log("tarnscriptData: ", transcriptData.transcript.content.body);
+    const info = await fetchTranscript(videoId);
+    // console.log("heres the infor: ", info) // this info is of type: [{text: "let's talk about react what is it how", duration: 4240, offset: 160, lang: 'en'},]
+    const tdataArr = info?.map(
+        segment => segment.text
+      ) || []
+    const transcriptData = tdataArr.join(" ")
     console.log('transcriptData: ', transcriptData)
     ///////////////////////////////////////////////////////////////////////////
 
-    if (!transcriptData || transcriptData === '') {
+    // if (!transcriptData || transcriptData === '') {
+    if (!transcriptData ) {
       return NextResponse.json(
         { message: 'Transcription Failed.' },
         { status: 400 }
@@ -87,10 +97,11 @@ export async function POST (req: Request) {
 
     //#2: hit the gemini and get all the details of the cards and functions
     console.log('Generating content...')
-    // const geminiData = await getGeminiData(transcriptData)
+    const geminiData = await getGeminiData(transcriptData)
+    console.log('GEMINI Data:', geminiData)
     // const nebiusData = await getNebiusData(transcriptData)
-    const nebiusData = await getNebiusDataGen(transcriptData)
-    console.log('nebiusData:', nebiusData)
+    // const nebiusData = await getNebiusDataGen(transcriptData)
+    // console.log('nebiusData:', nebiusData)
     // const parsedFlashcards = JSON.parse(nebiusData?.flashCard);
     // const parsedQuizzes = JSON.parse(nebiusData?.quiz);
     // const parsedProjectList = JSON.parse(nebiusData.projectList);
@@ -162,19 +173,29 @@ export async function POST (req: Request) {
     // console.log('parsed flashcard:', flashcards)
 
     console.log('Storing generated Notesdata in the db...')
-
+// _______________________
+    // const NotesData = await VideoNotesModel.create({
+    //     userId: userId,
+    //     videoId: videoData._id,
+    //     revisedNotes: nebiusData?.revisionNotes,
+    //     flashcards: nebiusData?.flashCard,
+    //     quizzes: nebiusData?.quiz,
+    //     projectList: nebiusData?.projectList,
+    //     storytelling: nebiusData?.story
+    //   })
     const NotesData = await VideoNotesModel.create({
-      userId: userId,
-      videoId: videoData._id,
-      revisedNotes: nebiusData?.revisionNotes,
-      flashcards: nebiusData?.flashCard,
-      quizzes: nebiusData?.quiz,
-      projectList: nebiusData?.projectList,
-      storytelling: nebiusData?.story
-    })
-
+        userId: userId,
+        videoId: videoData._id,
+        revisedNotes: geminiData?.revisionNotes,
+        flashcards: geminiData?.flashCard,
+        quizzes: geminiData?.quiz,
+        projectList: geminiData?.projectList,
+        storytelling: geminiData?.story
+      })
+  // _______________________
+  
     // // const storytelling = [
-    // //   {
+      // //   {
     // //     text: "Once upon a time, in the magical land of coding, lived a curious robot named Bolt. Bolt loved to explore new things, and one day he stumbled upon a mysterious box labeled 'GPT-3'.  Curious, Bolt opened it, and inside was a powerful tool that could generate text just like a human!",
     // //     prompt: "Illustration of a friendly robot named Bolt, excitedly looking at a computer screen showing the words 'GPT-3'."
     // //   },
@@ -199,7 +220,9 @@ export async function POST (req: Request) {
     // // console.log(responseJson);
 
     // // console.log("transcriptData:", transcriptData)
+    //_____________________
     return NextResponse.json({ notesDataId: NotesData._id }, { status: 200 })
+    //_____________________
     // return NextResponse.json({ "msg": "asdf" }, { status: 200 })
   } catch (e) {
     console.log('Exception happened:\n')

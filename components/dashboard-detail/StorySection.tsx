@@ -472,7 +472,7 @@ export default function StorySection ({ story, videoId }: StoryProps) {
     const voices = window.speechSynthesis.getVoices()
     utterance.voice = voices.find(voice => voice.lang === 'en-US') || voices[0]
     utterance.lang = 'en-US'
-    utterance.rate = 1
+    utterance.rate = 1.2
     utterance.pitch = 1
     utterance.volume = 1
 
@@ -588,11 +588,13 @@ export default function StorySection ({ story, videoId }: StoryProps) {
         })
         const data = await response.data
         setNewStoryLoading(false)
+        toast("Token Limit Exceeded! Image quality might be low..srry :)")
+
         setImageURLs(data.imageURLs)
       // }
       // console.log('response data: ', data)
     } catch (error) {
-      toast("Error getting the Imgages.")
+      toast("Error getting the Images! might be out of token :(")
       console.log('error:', error)
     }
 
@@ -616,7 +618,7 @@ export default function StorySection ({ story, videoId }: StoryProps) {
       ) : (
         <>
           <CardContent className='space-y-4'>
-            <div className='relative w-full h-[32rem] max-h-[32rem] overflow-hidden rounded-lg'>
+            <div className='relative w-full h-[42rem] max-h-[42rem] overflow-hidden rounded-lg'>
               <AnimatePresence initial={false}>
                 <motion.div
                   key={currentPage}
